@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link href="static/css/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="static/css/main.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  {% block head %}{% endblock %}
+</head>
+<body>
+  <nav class="light-red" role="navigation">
+    <div class="nav-wrapper">
+      <a href="#" class="brand-logo center">Genes2WordCloud</a>
+      <ul class="left hide-on-med-and-down">
+        <li><a href="/create">Create</a></li>
+        <li><a href="/view">View</a></li>
+        <li><a href="/help">Help</a></li>
+      </ul>
+      <ul class="side-nav" id="side-nav">
+        <li><a href="/create">Create</a></li>
+        <li><a href="/view">View</a></li>
+        <li><a href="/help">Help</a></li>
+      </ul>
+      <a href="#" data-activates="side-nav" class="button-collapse"><i class="material-icons">menu</i></a>
+    </div>
+  </nav>
+  <div class="container">
+  {% block body %}{% endblock %}
+  </div>
+  <footer class="page-footer light-red">
+    <div class="container">
+      <div class="row">
+        <div class="col l6 s12">
+          <h5 class="white-text">About</h5>
+          <p class="grey-text text-lighten-4">Genese2WordCloud is an application.</p>
+        </div>
+        <div class="col l3 s12">
+          <h5 class="white-text">Links</h5>
+          <ul>
+            <li><a href="http://www.mountsinai.org/Research/Centers%20Laboratories%20and%20Programs/Maayan%20Laboratory">Ma'ayan Laboratory</a></li>
+            <li><a href="http://www.sbcny.org">Systems Biology Center New York</a></li>
+            <li><a href="http://www.mountsinai.org/Education/School%20of%20Medicine">Mount Sinai School of Medicine</a></li>
+          </ul>
+        </div>
+        <div class="col l3 s12">
+          <h5 class="white-text">Connect</h5>
+          <a class="github-button" href="https://github.com/MaayanLab/genes2wordcloud" data-icon="octicon-star" data-style="mega" data-count-href="/MaayanLab/genes2wordcloud/stargazers" data-count-api="/repos/MaayanLab/genes2wordcloud#stargazers_count" data-count-aria-label="# stargazers on GitHub" aria-label="Star MaayanLab/genes2wordcloud on GitHub">Star</a>
+          <script async defer src="https://buttons.github.io/buttons.js"></script>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <script src="static/js/materialize.min.js"></script>
+  <script src="static/js/main.js"></script>
+</body>
+</html>
