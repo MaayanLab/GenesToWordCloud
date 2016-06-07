@@ -3,23 +3,73 @@
 <head>
   <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <link href="static/css/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection"/>
-  <link href="static/css/main.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="/static/css/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="/static/css/main.css" type="text/css" rel="stylesheet" media="screen,projection"/>
   {% block head %}{% endblock %}
 </head>
 <body>
+  <ul id="create-dropdown" class="dropdown-content">
+    <li><a href="/create/genes">Genes</a></li>
+    <li><a href="/create/free_text">Free Text</a></li>
+    <li><a href="/create/url">URL</a></li>
+    <li><a href="/create/author">Author</a></li>
+    <li><a href="/create/pubmed">Pubmed Search</a></li>
+    <li><a href="/create/bmc">BMC Bioinformatics</a></li>
+  </ul>
+  <ul id="help-dropdown" class="dropdown-content">
+    <li><a href="/help#introduction">Introduction</a></li>
+    <li><a href="/help#structure">Structure</a></li>
+    <li><a href="/help#examples">Examples</a></li>
+    <li><a href="/help#troubleshooting">Troubleshooting</a></li>
+    <li><a href="/help#faq">FAQ</a></li>
+    <li><a href="/help#contact">Contact</a></li>
+  </ul>
+
   <nav class="light-red" role="navigation">
     <div class="nav-wrapper">
-      <a href="#" class="brand-logo center">Genes2WordCloud</a>
+      <a href="/" class="brand-logo center">Genes2WordCloud</a>
       <ul class="left hide-on-med-and-down">
-        <li><a href="/create">Create</a></li>
+        <li><a class="dropdown-button" href="#!" data-activates="create-dropdown">Create</a></li>
         <li><a href="/view">View</a></li>
-        <li><a href="/help">Help</a></li>
+        <li><a class="dropdown-button" href="#!" data-activates="help-dropdown">Help</a></li>
       </ul>
       <ul class="side-nav" id="side-nav">
-        <li><a href="/create">Create</a></li>
-        <li><a href="/view">View</a></li>
-        <li><a href="/help">Help</a></li>
+        <li class="no-padding">
+          <ul class="collapsible" data-collapsible="accordion">
+            <li class="bold">
+              <div class="collapsible-header dark">Create</div>
+              <div class="collapsible-body">
+                <ul>
+                  <li><a href="/create/genes">Genes</a></li>
+                  <li><a href="/create/free_text">Free Text</a></li>
+                  <li><a href="/create/url">URL</a></li>
+                  <li><a href="/create/author">Author</a></li>
+                  <li><a href="/create/pubmed">Pubmed Search</a></li>
+                  <li><a href="/create/bmc">BMC Bioinformatics</a></li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </li>
+        <li class="bold"><a href="/view">View</a></li>
+        <li class="no-padding">
+          <ul class="collapsible" data-collapsible="accordion">
+            <li class="bold">
+              <div class="collapsible-header dark">Help</div>
+              <div class="collapsible-body">
+                <ul>
+                  <li><a href="/help/#introduction">Introduction</a></li>
+                  <li><a href="/help/#structure">Structure</a></li>
+                  <li><a href="/help/#examples">Examples</a></li>
+                  <li><a href="/help/#troubleshooting">Troubleshooting</a></li>
+                  <li><a href="/help/#faq">FAQ</a></li>
+                  <li><a href="/help/#contact">Contact</a></li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </li>
+      </ul>
       </ul>
       <a href="#" data-activates="side-nav" class="button-collapse"><i class="material-icons">menu</i></a>
     </div>
@@ -51,7 +101,7 @@
     </div>
   </footer>
   <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-  <script src="static/js/materialize.min.js"></script>
-  <script src="static/js/main.js"></script>
+  <script src="/static/js/materialize.min.js"></script>
+  <script src="/static/js/main.js"></script>
 </body>
 </html>
