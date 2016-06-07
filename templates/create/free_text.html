@@ -2,7 +2,7 @@
 {% block head %}<title>Genes2WorldCloud: Create Free Text</title>{% endblock %}
 {% block body %}
 <h2>Create a WordCloud from free text</h2>
-<form method="post" action="/view/free_text">
+<form method="post" action="javascript:create('free_text')">
 	<p class="input-field">
 		Paste free text in the text box below. Words will be stemmed and common English words will be removed.<br />
 		<textarea name="text" id="text" class="materialize-textarea"></textarea><br />
@@ -17,4 +17,5 @@
 	</p>
 	<p class="input-field"><input type="submit"></p>
 </form>
+<div class="container" id="view"></div>
 {% endblock %}

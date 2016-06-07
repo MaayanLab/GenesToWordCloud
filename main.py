@@ -1,5 +1,8 @@
 #!/usr/local/bin/python3
 
+import re
+import urllib 
+from word_cloud import generate
 from flask import Flask, render_template, url_for, request
 app = Flask(__name__, static_folder='static')
 
@@ -17,39 +20,47 @@ def route_page(func):
 	def create():
 		return render_template('create/%s.html' % (name))
 	app.add_url_rule('/create/%s' % (name), 'create_%s' % (name), create)
-	app.add_url_rule('/view/%s' % (name), 'view_%s' % (name), func, methods=['POST'])
+	app.add_url_rule('/view/%s' % (name), 'view_%s' % (name), func, methods=['GET'])
 
 @route_page
 def genes():
-	return render_template('view/genes.html',
-		genes=request.form['genes'],
-		source=request.form['source'])
+	# request.form['genes']
+	# request.form['source']
+	pass
 
 @route_page
 def free_text():
-	return render_template('view/free_text.html',
-		text=request.form['text'],
-		stopwords=request.form['stopwords'],
-		biostopwords=request.form['biostopwords'])
+	text = request.args.get('text')
+	# request.form['stopwords'],
+	# request.form['biostopwords'],
+	return generate(text)
 
 @route_page
 def url():
-	return render_template('view/url.html',
-		url=request.form['url'],
-		stopwords=request.form['stopwords'],
-		biostopwords=request.form['biostopwords'])
+	text = urllib.request.get(request.args.get('url')).text
+	# html entities
+	# request.form['stopwords'],
+	# request.form['biostopwords'],
+	return generate(text)
 
 @route_page
 def author():
-	return render_template('view/author.html')
+	pass
 
 @route_page
 def pubmed():
-	return render_template('view/pubmed.html')
+	pass
 
 @route_page
 def bmc():
-	return render_template('view/bmc.html')
+	if request.form['date'] == 'year':
+		urllib.request.get('http://www.biomedcentral.com/bmcbioinformatics/mostviewedbyyear/')
+	elif request.form['date'] == 'ever':
+		urllib.request.get('http://www.biomedcentral.com/mostviewedalltime/')
+	else:
+		urllib.request.get('http://www.biomedcentral.com/bmcbioinformatics/mostviewed/')
+	# todo
+	pass
 
 
 app.run(debug=True)

@@ -2,7 +2,7 @@
 {% block head %}<title>Genes2WorldCloud: Create URL</title>{% endblock %}
 {% block body %}
 <h2>Create a WordCloud from text extracted from a given URL</h2>
-<form method="post" action="/view/url">
+<form method="get" action="javascript:create('url')">
 	<p class="input-field">
 		Paste in a valid URL. Words will be stemmed and common English words will be removed.<br />
 		<input type="url" name="url" id="url">
@@ -17,4 +17,5 @@
 	</p>
 	<p><input type="submit"></p>
 </form>
+<div class="container" id="view"></div>
 {% endblock %}
