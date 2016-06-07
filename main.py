@@ -18,7 +18,7 @@ def help():
 def route_page(func):
 	name = func.__name__
 	def create():
-		return render_template('create/%s.html' % (name))
+		return render_template('create/%s.html' % (name), cloud_type=name)
 	app.add_url_rule('/create/%s' % (name), 'create_%s' % (name), create)
 	app.add_url_rule('/view/%s' % (name), 'view_%s' % (name), func, methods=['GET'])
 
@@ -37,7 +37,9 @@ def free_text():
 
 @route_page
 def url():
-	text = urllib.request.get(request.args.get('url')).text
+	url = urllib.request.urlopen(request.args.get('url'))
+	text = '\n'.join(map(str, url.readlines()))
+	url.close()
 	# html entities
 	# request.form['stopwords'],
 	# request.form['biostopwords'],

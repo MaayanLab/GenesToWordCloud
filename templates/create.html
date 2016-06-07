@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block head %}<title>Genes2WorldCloud: Create {% block title %}{% endblock %}</title>{% endblock %}
+{% block body %}
+<h2>{% block header %}{% endblock %}</h2>
+<form method="post" action="javascript:create('{{ cloud_type }}')">{% block form %}{% endblock %}</form>
+<div class="container" id="view"></div>
+{% endblock %}
