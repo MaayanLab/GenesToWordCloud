@@ -34,7 +34,10 @@ def free_text():
 
 @route_page
 def url():
-	return render_template('view/url.html')
+	return render_template('view/url.html',
+		url=request.form['url'],
+		stopwords=request.form['stopwords'],
+		biostopwords=request.form['biostopwords'])
 
 @route_page
 def author():

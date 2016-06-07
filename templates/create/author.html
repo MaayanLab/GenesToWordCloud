@@ -1,6 +1,13 @@
 {% extends "base.html" %}
 {% block head %}<title>Genes2WorldCloud: Create Author</title>{% endblock %}
 {% block body %}
-<h1>Create Author</h1>
-
+<h2>Create a WordCloud from all publications for an author</h2>
+<form method="post" action="/view/author">
+	<p>
+		Paste in the author's last name and initials separated by space. Do not use punctuations.<br />
+		For example, Newson Ainsley James should be entered as Newson AJ.<br />
+		<input type="text" name="keyword" id="keyword">
+	</p>
+	<p><input type="submit"></p>
+</form>
 {% endblock %}

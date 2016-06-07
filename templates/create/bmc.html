@@ -1,6 +1,17 @@
 {% extends "base.html" %}
 {% block head %}<title>Genes2WorldCloud: Create BMC Bioinformation</title>{% endblock %}
 {% block body %}
-<h1>Create BMC Bioinformation</h1>
-
+<h2>Create a WordCloud from the currently most popular abstracts in BMC Bioinformatics</h2>
+<form method="post" action="/view/bmc">
+	<p>Generate a WordCloud made of a collection of abstracts that are from the mostly viewed BMC Bioinformatics articles</p>
+	<p class="input-field">
+		Most viewed articles in:
+		<select name="date" id="date">
+			<option value="month">past 30 days</option>
+			<option value="year">past year</option>
+			<option value="ever">all times</option>
+		</select>
+	</p>
+	<p><input type="submit"></p>
+</form>
 {% endblock %}

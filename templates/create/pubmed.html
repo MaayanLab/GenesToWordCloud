@@ -1,6 +1,12 @@
 {% extends "base.html" %}
 {% block head %}<title>Genes2WorldCloud: Create Pubmed Search</title>{% endblock %}
 {% block body %}
-<h1>Create Pubmed Search</h1>
-
+<h2>Create a WordCloud from a Pubmed Search</h2>
+<form method="post" action="/view/pubmed">
+	<p>
+		Paste keyword(s) as if you were using a regular Pubmed search.<br />
+		<input type="text" name="keyword" id="keyword">
+	</p>
+	<p><input type="submit"></p>
+</form>
 {% endblock %}

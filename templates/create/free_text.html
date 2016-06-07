@@ -2,16 +2,19 @@
 {% block head %}<title>Genes2WorldCloud: Create Free Text</title>{% endblock %}
 {% block body %}
 <h2>Create a WordCloud from free text</h2>
-<p>
-	Paste free text in the text box below. Words will be stemmed and common English words will be removed.<br />
-	<textarea name="text" id="text"></textarea><br />
-</p>
-<p>
-	<input type="checkbox" id="stopwords" name="stopwords">
-	<label for="stopwords">Remove common English Words</label>
-</p>
-<p>
-	<input type="checkbox" id="biostopwords" name="biostopwords">
-	<label for="biostopwords">Remove common Biological Terms</label>
-</p>
+<form method="post" action="/view/free_text">
+	<p class="input-field">
+		Paste free text in the text box below. Words will be stemmed and common English words will be removed.<br />
+		<textarea name="text" id="text" class="materialize-textarea"></textarea><br />
+	</p>
+	<p class="input-field">
+		<input type="checkbox" id="stopwords" name="stopwords">
+		<label for="stopwords">Remove common English Words</label>
+	</p>
+	<p class="input-field">
+		<input type="checkbox" id="biostopwords" name="biostopwords">
+		<label for="biostopwords">Remove common Biological Terms</label>
+	</p>
+	<p class="input-field"><input type="submit"></p>
+</form>
 {% endblock %}

@@ -16,6 +16,7 @@
     <li><a href="/create/pubmed">Pubmed Search</a></li>
     <li><a href="/create/bmc">BMC Bioinformatics</a></li>
   </ul>
+  
   <ul id="help-dropdown" class="dropdown-content">
     <li><a href="/help#introduction">Introduction</a></li>
     <li><a href="/help#structure">Structure</a></li>
@@ -30,53 +31,55 @@
       <a href="/" class="brand-logo center">Genes2WordCloud</a>
       <ul class="left hide-on-med-and-down">
         <li><a class="dropdown-button" href="#!" data-activates="create-dropdown">Create</a></li>
-        <li><a href="/view">View</a></li>
+        <li class="inactive"><a href="#!">View</a></li>
         <li><a class="dropdown-button" href="#!" data-activates="help-dropdown">Help</a></li>
-      </ul>
-      <ul class="side-nav" id="side-nav">
-        <li class="no-padding">
-          <ul class="collapsible" data-collapsible="accordion">
-            <li class="bold">
-              <div class="collapsible-header dark">Create</div>
-              <div class="collapsible-body">
-                <ul>
-                  <li><a href="/create/genes">Genes</a></li>
-                  <li><a href="/create/free_text">Free Text</a></li>
-                  <li><a href="/create/url">URL</a></li>
-                  <li><a href="/create/author">Author</a></li>
-                  <li><a href="/create/pubmed">Pubmed Search</a></li>
-                  <li><a href="/create/bmc">BMC Bioinformatics</a></li>
-                </ul>
-              </div>
-            </li>
-          </ul>
-        </li>
-        <li class="bold"><a href="/view">View</a></li>
-        <li class="no-padding">
-          <ul class="collapsible" data-collapsible="accordion">
-            <li class="bold">
-              <div class="collapsible-header dark">Help</div>
-              <div class="collapsible-body">
-                <ul>
-                  <li><a href="/help/#introduction">Introduction</a></li>
-                  <li><a href="/help/#structure">Structure</a></li>
-                  <li><a href="/help/#examples">Examples</a></li>
-                  <li><a href="/help/#troubleshooting">Troubleshooting</a></li>
-                  <li><a href="/help/#faq">FAQ</a></li>
-                  <li><a href="/help/#contact">Contact</a></li>
-                </ul>
-              </div>
-            </li>
-          </ul>
-        </li>
-      </ul>
       </ul>
       <a href="#" data-activates="side-nav" class="button-collapse"><i class="material-icons">menu</i></a>
     </div>
   </nav>
+
+  <ul class="side-nav" id="side-nav">
+    <li class="no-padding">
+      <ul class="collapsible" data-collapsible="accordion">
+        <li class="bold">
+          <div class="collapsible-header">Create</div>
+          <div class="collapsible-body">
+            <ul>
+              <li><a href="/create/genes">Genes</a></li>
+              <li><a href="/create/free_text">Free Text</a></li>
+              <li><a href="/create/url">URL</a></li>
+              <li><a href="/create/author">Author</a></li>
+              <li><a href="/create/pubmed">Pubmed Search</a></li>
+              <li><a href="/create/bmc">BMC Bioinformatics</a></li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+    </li>
+    <li class="bold inactive"><a href="#!">View</a></li>
+    <li class="no-padding">
+      <ul class="collapsible" data-collapsible="accordion">
+        <li class="bold">
+          <div class="collapsible-header">Help</div>
+          <div class="collapsible-body">
+            <ul>
+              <li><a href="/help/#introduction">Introduction</a></li>
+              <li><a href="/help/#structure">Structure</a></li>
+              <li><a href="/help/#examples">Examples</a></li>
+              <li><a href="/help/#troubleshooting">Troubleshooting</a></li>
+              <li><a href="/help/#faq">FAQ</a></li>
+              <li><a href="/help/#contact">Contact</a></li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+    </li>
+  </ul>
+
   <div class="container">
   {% block body %}{% endblock %}
   </div>
+
   <footer class="page-footer light-red">
     <div class="container">
       <div class="row">
@@ -87,9 +90,9 @@
         <div class="col l3 s12">
           <h5 class="white-text">Links</h5>
           <ul>
-            <li><a href="http://www.mountsinai.org/Research/Centers%20Laboratories%20and%20Programs/Maayan%20Laboratory">Ma'ayan Laboratory</a></li>
-            <li><a href="http://www.sbcny.org">Systems Biology Center New York</a></li>
-            <li><a href="http://www.mountsinai.org/Education/School%20of%20Medicine">Mount Sinai School of Medicine</a></li>
+            <li><a class="white-text" href="http://www.mountsinai.org/Research/Centers%20Laboratories%20and%20Programs/Maayan%20Laboratory">Ma'ayan Laboratory</a></li>
+            <li><a class="white-text" href="http://www.sbcny.org">Systems Biology Center New York</a></li>
+            <li><a class="white-text" href="http://www.mountsinai.org/Education/School%20of%20Medicine">Mount Sinai School of Medicine</a></li>
           </ul>
         </div>
         <div class="col l3 s12">

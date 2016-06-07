@@ -3,13 +3,13 @@
 {% block body %}
 <h2>Generate a WordCloud for a specific gene, or a list of genes</h2>
 <form method="post" action="/view/genes">
-	<p>
+	<p class="input-field">
 		Paste Mammalian Entrez Gene symbols in the text area below:<br />
 		(separated by either : ; , - \r \t \n or spaces)<br />
-		<textarea name="genes" id="genes">KLF4</textarea>
+		<textarea name="genes" id="genes" class="materialize-textarea">KLF4</textarea>
 	</p>
-	<p>
-		Source for the WordCloud:
+	<p class="input-field">
+		Source for the WordCloud
 		<select name="source" id="source">
 			<option value="generif">Generif annotations</option>
 			<option value="pubmed">Abstracts of Pubmed articles</option>
@@ -17,7 +17,7 @@
 			<option value="mp">Mammalian Phenotype Ontology annotations</option>
 			<option value="mesh_terms">Mesh Terms from Pubmed</option>
 		</select>
-	</p>
-	<input type="submit">
+  	</p>
+	<p class="input-field"><input type="submit"></p>
 </form>
 {% endblock %}
