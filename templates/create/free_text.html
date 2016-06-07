@@ -1,6 +1,17 @@
 {% extends "base.html" %}
 {% block head %}<title>Genes2WorldCloud: Create Free Text</title>{% endblock %}
 {% block body %}
-<h1>Create Free Text</h1>
-
+<h2>Create a WordCloud from free text</h2>
+<p>
+	Paste free text in the text box below. Words will be stemmed and common English words will be removed.<br />
+	<textarea name="text" id="text"></textarea><br />
+</p>
+<p>
+	<input type="checkbox" id="stopwords" name="stopwords">
+	<label for="stopwords">Remove common English Words</label>
+</p>
+<p>
+	<input type="checkbox" id="biostopwords" name="biostopwords">
+	<label for="biostopwords">Remove common Biological Terms</label>
+</p>
 {% endblock %}
