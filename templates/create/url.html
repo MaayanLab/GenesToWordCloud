@@ -3,16 +3,7 @@
 {% block header %}Create a WordCloud from text extracted from a given URL{% endblock %}
 {% block form %}
 <p class="input-field">
-	Paste in a valid URL. Words will be stemmed and common English words will be removed.<br />
+	Paste in a valid URL<br />
 	<input type="url" name="url" id="url">
 </p>
-<p class="input-field">
-	<input type="checkbox" id="stopwords" name="stopwords">
-	<label for="stopwords">Remove common English Words</label>
-</p>
-<p class="input-field">
-	<input type="checkbox" id="biostopwords" name="biostopwords">
-	<label for="biostopwords">Remove common Biological Terms</label>
-</p>
-<p><input type="submit"></p>
 {% endblock %}

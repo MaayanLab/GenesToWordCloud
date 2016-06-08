@@ -3,15 +3,7 @@
 {% block header %}Create a WordCloud from free text{% endblock %}
 {% block form %}
 <p class="input-field">
-	Paste free text in the text box below. Words will be stemmed and common English words will be removed.<br />
+	Paste free text in the text box below<br />
 	<textarea name="text" id="text" class="materialize-textarea"></textarea>
-</p>
-<p class="input-field">
-	<input type="checkbox" id="stopwords" name="stopwords">
-	<label for="stopwords">Remove common English Words</label>
-</p>
-<p class="input-field">
-	<input type="checkbox" id="biostopwords" name="biostopwords">
-	<label for="biostopwords">Remove common Biological Terms</label>
 </p>
 {% endblock %}
