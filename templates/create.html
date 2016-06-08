@@ -2,6 +2,45 @@
 {% block head %}<title>Genes2WorldCloud: Create {% block title %}{% endblock %}</title>{% endblock %}
 {% block body %}
 <h2>{% block header %}{% endblock %}</h2>
-<form method="post" action="javascript:create('{{ cloud_type }}')">{% block form %}{% endblock %}</form>
+<form method="post" action="javascript:create('{{ cloud_type }}')">
+	{% block form %}{% endblock %}
+	<p><br /></p>
+	<p class="input-field">
+		<select name="angler" id="angler">
+			<option value="mostlyHoriz">Mostly Horizontal</option>
+			<option value="heaped">Heaped</option>
+			<option value="hexes">Hexes</option>
+			<option value="horiz">Horizontal</option>
+			<option value="random">Random</option>
+			<option value="updAndDown">Up And Down</option>
+		</select>
+		<label for="angler">Angle</label>
+	</p>
+	<p class="input-field">
+		<select name="placer" id="placer">
+			<option value="centerClump">centerClump</option>
+			<option value="horizBandAnchoredLeft">horizBandAnchoredLeft</option>
+			<option value="horizLine">horizLine</option>
+			<option value="swirl">swirl</option>
+			<option value="upperLeft">upperLeft</option>
+			<option value="wave">wave</option>
+		</select>
+		<label for="placer">Placer</label>
+	</p>
+	<p class="input-field">
+		<select name="case" id="case">
+			<option value="lower">Lower Case</option>
+			<option value="upper">Upper Case</option>
+			<option value="first">First Letter Case</option>
+		</select>
+		<label for="case">Upper, lower, first case</label>
+	</p>
+	<p class="input-field">
+		<textarea name="blacklist" id="blacklist" class="materialize-textarea"></textarea>
+		<label for="blacklist">Blacklist keywords</label>
+	</p>
+	<p class="input-field"><input type="submit"></p>
+</form>
+<p><br /></p>
 <div class="container" id="view"></div>
 {% endblock %}

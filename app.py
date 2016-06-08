@@ -1,7 +1,6 @@
-#!/usr/local/bin/python3
-
 import re
-import urllib 
+import urllib
+import random
 from word_cloud import generate
 from flask import Flask, render_template, url_for, request
 app = Flask(__name__, static_folder='static')
@@ -22,6 +21,39 @@ def route_page(func):
 	app.add_url_rule('/create/%s' % (name), 'create_%s' % (name), create)
 	app.add_url_rule('/view/%s' % (name), 'view_%s' % (name), func, methods=['GET'])
 
+def process(text, args):
+	d = {}
+
+	angler = args.get('angler')
+	if angler:
+		if angler == 'mostlyHoriz':
+			d['prefer_horizontal'] = 0.9
+		elif angler == 'horiz':
+			d['prefer_horizontal'] = 1.0
+		elif angler == 'random':
+			d['prefer_horizontal'] = random.uniform(0, 1)
+	# todo: heaped, hexes
+
+	placer = args.get('placer')
+	if placer:
+		pass
+		# centerClump, horizBandAnchoredLeft, horizLine, swirl, upperLeft, wave
+
+	case = args.get('case')
+	if case:
+		if case == 'lower':
+			text = text.lower()
+		elif case == 'upper':
+			text = text.upper()
+		elif case == 'first':
+			text = text.capitalize()
+
+	blacklist = args.get('blacklist')
+	if blacklist:
+		d['stopwords'] = blacklist.split()
+
+	return generate(text, **d)
+
 @route_page
 def genes():
 	# request.form['genes']
@@ -31,19 +63,16 @@ def genes():
 @route_page
 def free_text():
 	text = request.args.get('text')
-	# request.form['stopwords'],
-	# request.form['biostopwords'],
-	return generate(text)
+	# todo stopwords, biostopwords
+	return process(text, request.args)
 
 @route_page
 def url():
 	url = urllib.request.urlopen(request.args.get('url'))
 	text = '\n'.join(map(str, url.readlines()))
 	url.close()
-	# html entities
-	# request.form['stopwords'],
-	# request.form['biostopwords'],
-	return generate(text)
+	# todo: stopwords, biostopwords
+	return process(text, request.args)
 
 @route_page
 def author():
@@ -63,6 +92,3 @@ def bmc():
 		urllib.request.get('http://www.biomedcentral.com/bmcbioinformatics/mostviewed/')
 	# todo
 	pass
-
-
-app.run(debug=True)
