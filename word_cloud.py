@@ -1,6 +1,5 @@
 from io import BytesIO
 from flask import send_file
-from wordcloud import WordCloud
 from nltk.tokenize import RegexpTokenizer
 from nltk.stem.porter import PorterStemmer
 from nltk.stem.wordnet import WordNetLemmatizer
@@ -30,10 +29,8 @@ def process_text(text, **kwargs):
 
 def generate(text, **kwargs):
 	''' Generate the word cloud and pass the file pointer '''
-	img = BytesIO()
-	WordCloud(**kwargs).generate(text).to_image().save(img, 'jpeg')
-	img.seek(0)
-	return img
+	# todo
+	pass
 
 def process_page(text, args):
 	g = {'stopwords': []}

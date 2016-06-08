@@ -6,4 +6,3 @@ nltk
 sklearn
 scipy
 pymysql
-wordcloud
