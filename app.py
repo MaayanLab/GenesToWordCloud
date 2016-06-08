@@ -1,5 +1,5 @@
 import urllib
-import pymysql
+import pyodbc
 from bs4 import BeautifulSoup
 from flask import Flask, render_template, url_for, request
 from word_cloud import process_page
@@ -35,22 +35,22 @@ def genes():
 	if not source:
 		return None
 
-	con = pymysql.connect(**config['database'])
+	con = pyodbc.connect(config['database'])
 	with con.cursor() as cur:
 		if source == "generif":
-			cur.execute('select generif, pmid from generif where %s order by random(), pmid limit %d', (gene_query, config['query_limit']))
+			cur.execute('select generif, pmid from generif where ? order by random(), pmid limit ?', (gene_query, config['query_limit']))
 			text = ' '.join(pubmed_query(id=row['pmid']) for row in cur.fetchall())
 		elif source == 'pubmed':
-			cur.execute('select pmid from pmid_symbol where %s order by random() limit %d', (gene_query, config['query_limit']))
+			cur.execute('select pmid from pmid_symbol where ? order by random() limit ?', (gene_query, config['query_limit']))
 			text = ' '.join(pubmed_query(id=row['pmid']) for row in cur.fetchall())
 		elif source == 'go':
-			cur.execute('select go, goID from go where %s order by random(), goID limit %d', (gene_query, config['query_limit']))
+			cur.execute('select go, goID from go where ? order by random(), goID limit ?', (gene_query, config['query_limit']))
 			text = ' '.join(row['go'] for row in cur.fetchall())
 		elif source == 'mp':
-			cur.execute('select mp, mpID from mp where %s order by random(), mp limit %d', (gene_query, config['query_limit']))
+			cur.execute('select mp, mpID from mp where ? order by random(), mp limit ?', (gene_query, config['query_limit']))
 			text = ' '.join(row['mp'] for row in cur.fetchall())
 		elif source == 'mesh_terms':
-			cur.execute('select pmid from pmid_symbol where %s order by random() limit %d', (gene_query, config['query_limit']))
+			cur.execute('select pmid from pmid_symbol where ? order by random() limit ?', (gene_query, config['query_limit']))
 			text = ' '.join(pubmed_query(id=row['pmid']) for row in cur.fetchall())
 		else:
 			return None
