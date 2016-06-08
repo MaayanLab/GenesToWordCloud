@@ -21,7 +21,7 @@ def route_page(func):
 	app.add_url_rule('/create/%s' % (name), 'create_%s' % (name), create)
 	app.add_url_rule('/view/%s' % (name), 'view_%s' % (name), func, methods=['GET'])
 
-def process(text, args):
+def process_page(text, args):
 	d = {}
 
 	angler = args.get('angler')
@@ -52,6 +52,8 @@ def process(text, args):
 	if blacklist:
 		d['stopwords'] = blacklist.split()
 
+	d['width'], d['height'] = min(1920, int(args.get('width'))), min(1200, int(args.get('height')))
+
 	return generate(text, **d)
 
 @route_page
@@ -63,8 +65,10 @@ def genes():
 @route_page
 def free_text():
 	text = request.args.get('text')
+	if not text:
+		return None
 	# todo stopwords, biostopwords
-	return process(text, request.args)
+	return process_page(text, request.args)
 
 @route_page
 def url():
@@ -72,7 +76,7 @@ def url():
 	text = '\n'.join(map(str, url.readlines()))
 	url.close()
 	# todo: stopwords, biostopwords
-	return process(text, request.args)
+	return process_page(text, request.args)
 
 @route_page
 def author():
