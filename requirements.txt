@@ -1,5 +1,4 @@
 flask
-wordcloud
 pillow
 beautifulsoup4
 lxml
@@ -7,3 +6,4 @@ nltk
 sklearn
 scipy
 pymysql
+wordcloud

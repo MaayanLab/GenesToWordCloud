@@ -8,6 +8,8 @@ from sklearn.feature_extraction.stop_words import ENGLISH_STOP_WORDS
 from config import config
 
 def process_text(text, **kwargs):
+	''' Process text pipeline, accepts different nlp flags
+	tokenize, stemmer, lemmantize '''
 	# https://github.com/wangz10/text-classification/blob/master/Main.ipynb
 
 	if kwargs.get('tokenize'):
@@ -27,11 +29,11 @@ def process_text(text, **kwargs):
 	return ' '.join(words)
 
 def generate(text, **kwargs):
+	''' Generate the word cloud and pass the file pointer '''
 	img = BytesIO()
 	WordCloud(**kwargs).generate(text).to_image().save(img, 'jpeg')
 	img.seek(0)
-	return send_file(img, mimetype='image/jpg')
-
+	return img
 
 def process_page(text, args):
 	g = {'stopwords': []}
@@ -73,6 +75,7 @@ def process_page(text, args):
 	if blacklist:
 		g['stopwords'] += blacklist.split()
 
-	g['width'], g['height'] = min(config['word_cloud']['max_width'], int(args.get('width'))), min(config['word_cloud']['max_height'], int(args.get('height')))
+	g['width'] = min(config['word_cloud']['max_width'], int(args.get('width')))
+	g['height'] = min(config['word_cloud']['max_height'], int(args.get('height')))
 
-	return generate(process_text(text, **p), **d)
+	return send_file(generate(process_text(text, **p), **d), mimetype='image/jpg')
