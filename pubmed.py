@@ -1,11 +1,12 @@
 import itertools
 import urllib.request
 from bs4 import BeautifulSoup
+from config import config
 
 def pubmed_query(**kwargs):
 	params = dict({'retmode': 'xml',
 				   'db': 'pubmed',
-				   'retmax': 10},
+				   'retmax': config['pubmed_query_limit']},
 				   **kwargs)
 	url = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?%s' % (
 		'&'.join(['='.join(map(str, param))

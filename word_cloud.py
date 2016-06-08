@@ -5,7 +5,7 @@ from nltk.tokenize import RegexpTokenizer
 from nltk.stem.porter import PorterStemmer
 from nltk.stem.wordnet import WordNetLemmatizer
 from sklearn.feature_extraction.stop_words import ENGLISH_STOP_WORDS
-
+from config import config
 
 def process_text(text, **kwargs):
 	# https://github.com/wangz10/text-classification/blob/master/Main.ipynb
@@ -73,6 +73,6 @@ def process_page(text, args):
 	if blacklist:
 		g['stopwords'] += blacklist.split()
 
-	g['width'], g['height'] = min(1920, int(args.get('width'))), min(1200, int(args.get('height')))
+	g['width'], g['height'] = min(config['word_cloud']['max_width'], int(args.get('width'))), min(config['word_cloud']['max_height'], int(args.get('height')))
 
 	return generate(process_text(text, **p), **d)

@@ -1,11 +1,10 @@
-import re
 import urllib
-import random
-import itertools
+import pymysql
 from bs4 import BeautifulSoup
 from flask import Flask, render_template, url_for, request
 from word_cloud import process_page
 from pubmed import pubmed_query
+from config import config
 
 app = Flask(__name__, static_folder='static')
 
@@ -30,26 +29,34 @@ def genes():
 	genes = request.args.get('genes')
 	if not genes:
 		return None
+	gene_query = ' or '.join(['geneName="%s"' % (gene) for gene in genes.split()])
 
 	source = request.args.get('source')
-	if source == "generif":
-		#  $query = "SELECT generif, pmid FROM generif WHERE".$query_ending."ORDER BY RAND(),pmid LIMIT ".$max_generifs;
-		pass
-	elif source == 'pubmed':
-		# $query = "SELECT pmid FROM pmid_symbol WHERE".$query_ending." ORDER BY RAND() LIMIT ".$max_pmids;
-		pass
-	elif source == 'go':
-		# $query = "SELECT go, goID FROM go WHERE".$query_ending."ORDER BY RAND(), goID LIMIT ".$max_go;
-		pass
-	elif source == 'mp':
-		# $query = "SELECT mp, mpID FROM mp WHERE".$query_ending."ORDER BY RAND(), mp LIMIT ".$max_mp;
-		pass
-	elif source == 'mesh_terms':
-		# $query = "SELECT pmid FROM pmid_symbol WHERE".$query_ending." ORDER BY RAND() LIMIT ".$max_pmids;
-		pass
-	
-	# we need to look at the old database to better understand how this should work
-	pass
+	if not source:
+		return None
+
+	con = pymysql.connect(**config['database'])
+	with con.cursor() as cur:
+		if source == "generif":
+			cur.execute('select generif, pmid from generif where %s order by random(), pmid limit %d', (gene_query, config['query_limit']))
+			text = ' '.join(pubmed_query(id=row['pmid']) for row in cur.fetchall())
+		elif source == 'pubmed':
+			cur.execute('select pmid from pmid_symbol where %s order by random() limit %d', (gene_query, config['query_limit']))
+			text = ' '.join(pubmed_query(id=row['pmid']) for row in cur.fetchall())
+		elif source == 'go':
+			cur.execute('select go, goID from go where %s order by random(), goID limit %d', (gene_query, config['query_limit']))
+			text = ' '.join(row['go'] for row in cur.fetchall())
+		elif source == 'mp':
+			cur.execute('select mp, mpID from mp where %s order by random(), mp limit %d', (gene_query, config['query_limit']))
+			text = ' '.join(row['mp'] for row in cur.fetchall())
+		elif source == 'mesh_terms':
+			cur.execute('select pmid from pmid_symbol where %s order by random() limit %d', (gene_query, config['query_limit']))
+			text = ' '.join(pubmed_query(id=row['pmid']) for row in cur.fetchall())
+		else:
+			return None
+	con.close()
+
+	return process_page(text, request.args)
 
 @route_page
 def free_text():

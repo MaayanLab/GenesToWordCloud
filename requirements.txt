@@ -6,3 +6,4 @@ lxml
 nltk
 sklearn
 scipy
+pymysql
