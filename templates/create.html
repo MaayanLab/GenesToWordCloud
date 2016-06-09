@@ -2,7 +2,7 @@
 {% block head %}<title>Genes To World Cloud: Create {% block title %}{% endblock %}</title>{% endblock %}
 {% block body %}
 <h2>{% block header %}{% endblock %}</h2>
-<form method="post" action="javascript:create('{{ cloud_type }}')">
+<form method="post" action="javascript:void(0)" type="{{ cloud_type }}">
 	{% block form %}{% endblock %}
 	<p><br /></p>
 	<p class="input-field">
@@ -15,7 +15,7 @@
 	</p>
 	<br />
 	<p class="input-field">
-		<select name="angler" id="angler">
+		<select id="angler">
 			<option value="mostlyHoriz">Mostly Horizontal</option>
 			<option value="heaped">Heaped</option>
 			<option value="hexes">Hexes</option>
@@ -26,7 +26,7 @@
 		<label for="angler">Angle</label>
 	</p>
 	<p class="input-field">
-		<select name="placer" id="placer">
+		<select id="placer">
 			<option value="centerClump">centerClump</option>
 			<option value="horizBandAnchoredLeft">horizBandAnchoredLeft</option>
 			<option value="horizLine">horizLine</option>
@@ -50,11 +50,11 @@
 	</p>
 	<div class="row">
 		<div class="input-field col s6">
-			<input type="text" name="width" id="width" value="400">
+			<input type="number" id="width" value="400">
 			<label for="width">Width</label>
 		</div>
 		<div class="input-field col s6">
-			<input type="text" name="height" id="height" value="200">
+			<input type="number" id="height" value="200">
 			<label for="height">Height</label>
 		</div>
 	</div>
@@ -62,5 +62,5 @@
 </form>
 <p><br /></p>
 <div class="container" id="view"></div>
-<script src="/static/js/create.js"></script>
 {% endblock %}
+{% block script %}<script src="/static/js/create.js"></script>{% endblock %}

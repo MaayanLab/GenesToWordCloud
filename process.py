@@ -1,3 +1,5 @@
+import re
+import json
 from io import BytesIO
 from flask import send_file
 from nltk.tokenize import RegexpTokenizer
@@ -6,68 +8,52 @@ from nltk.stem.wordnet import WordNetLemmatizer
 from sklearn.feature_extraction.stop_words import ENGLISH_STOP_WORDS
 from config import config
 
-def process_text(text, **kwargs):
+def process_text(text, strip_symbols=True, tokenize=None, stemmer=None, lemmantize=None, case=None, stopwords=[], **kwargs):
 	''' Process text pipeline, accepts different nlp flags
 	tokenize, stemmer, lemmantize '''
 	# https://github.com/wangz10/text-classification/blob/master/Main.ipynb
 
-	if kwargs.get('tokenize'):
+	if tokenize or type(text) == str:
 		tokenizer = RegexpTokenizer(r'\b\w{1,}\b')
 		words = tokenizer.tokenize(text)
 	else:
 		words = text
 
-	if kwargs.get('stemmer'):
+	if strip_symbols:
+		words = list(filter(None, [re.sub(r'[^\w]','',word).strip() for word in words]))
+
+	if case:
+		words = list(
+			map({
+				'lower': str.lower,
+				'upper': str.upper,
+				'first': str.capitalize,
+			}.get(case), words))
+
+	if stemmer:
 		stemmer = PorterStemmer()
 		words = stemmer.stem(words)
 
-	if kwargs.get('lemmantize'):
+	if lemmantize:
 		lmmr = WordNetLemmatizer()
 		words = lmmr.lemmantize(words)
 
-	return ' '.join(words)
+	return [word for word in words
+			if word not in stopwords]
 
 def process_page(text, args):
-	g = {'stopwords': []}
-	p = {}
+	stopwords = []
+	if args.get('stopwords'):
+		stopwords += ENGLISH_STOP_WORDS
+	if args.get('biostopwords'):
+		stopwords += open('static/biostopwords.txt', 'r').readlines()
+	if args.get('blacklist'):
+		stopwords += args[blacklist].split()
 
-	stopwords = args.get('stopwords')
-	if stopwords:
-		g['stopwords'] += ENGLISH_STOP_WORDS
+	return json.dumps(
+		process_text(text,
+			stopwords=stopwords,
+			case=args.get('case')))
 
-	biostopwords = args.get('biostopwords')
-	if biostopwords:
-		g['stopwords'] += open('static/biostopwords.txt', 'r').readlines()
-
-	angler = args.get('angler')
-	if angler:
-		if angler == 'mostlyHoriz':
-			g['prefer_horizontal'] = 0.9
-		elif angler == 'horiz':
-			g['prefer_horizontal'] = 1.0
-		elif angler == 'random':
-			g['prefer_horizontal'] = random.uniform(0, 1)
-	# todo: heaped, hexes
-
-	placer = args.get('placer')
-	if placer:
-		pass
-		# centerClump, horizBandAnchoredLeft, horizLine, swirl, upperLeft, wave
-
-	case = args.get('case')
-	if case:
-		if case == 'lower':
-			text = text.lower()
-		elif case == 'upper':
-			text = text.upper()
-		elif case == 'first':
-			text = text.capitalize()
-
-	blacklist = args.get('blacklist')
-	if blacklist:
-		g['stopwords'] += blacklist.split()
-
-	g['width'] = min(config['word_cloud']['max_width'], int(args.get('width')))
-	g['height'] = min(config['word_cloud']['max_height'], int(args.get('height')))
-
-	return process_text(text, **p)
+def error():
+	return json.dumps([])
