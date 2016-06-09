@@ -5,10 +5,11 @@ from flask import send_file
 from nltk.tokenize import RegexpTokenizer
 from nltk.stem.porter import PorterStemmer
 from nltk.stem.wordnet import WordNetLemmatizer
+from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 from sklearn.feature_extraction.stop_words import ENGLISH_STOP_WORDS
 from config import config
 
-def process_text(text, strip_symbols=True, tokenize=None, stemmer=None, lemmantize=None, case=None, stopwords=[], **kwargs):
+def preprocess_text(text, strip_symbols=True, tokenize=None, stemmer=None, lemmantize=None, case=None, **kwargs):
 	''' Process text pipeline, accepts different nlp flags
 	tokenize, stemmer, lemmantize '''
 	# https://github.com/wangz10/text-classification/blob/master/Main.ipynb
@@ -38,8 +39,12 @@ def process_text(text, strip_symbols=True, tokenize=None, stemmer=None, lemmanti
 		lmmr = WordNetLemmatizer()
 		words = lmmr.lemmantize(words)
 
-	return [word for word in words
-			if word not in stopwords]
+	return words
+
+def process_text(text, stopwords=[], **kwargs):
+	cv = CountVectorizer(min_df=1, max_df=100, analyzer='word', ngram_range=(1,2), stop_words=stopwords)
+	cv.fit(text)
+	return [{'text': str(word), 'size': int(freq)} for word, freq in cv.vocabulary_.items()]
 
 def process_page(text, args):
 	stopwords = []
@@ -48,12 +53,11 @@ def process_page(text, args):
 	if args.get('biostopwords'):
 		stopwords += open('static/biostopwords.txt', 'r').readlines()
 	if args.get('blacklist'):
-		stopwords += args[blacklist].split()
-
+		stopwords += args['blacklist'].split()
 	return json.dumps(
-		process_text(text,
-			stopwords=stopwords,
-			case=args.get('case')))
+		process_text(
+			preprocess_text(text, case=args.get('case')),
+			stopwords=stopwords))
 
 def error():
 	return json.dumps([])

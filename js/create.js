@@ -61,11 +61,9 @@ $(document).ready(function() {
 		var url = $(this).attr('type');
 		$.get(window.location.origin+'/view/'+url, $(this).serialize())
 		 .done(function(data) {
-			layout.words(
-				JSON.parse(data)
-					.map(function(d) {
-						return {text: d, size: 10 + Math.random() * 90, test: "haha"};
-					})).start();
+			layout.words(JSON.parse(data).map(function(d) {
+				return {text: d['text'], size: d['size']}
+			})).start();
 		});
 		// TODO: error handling
 	});
