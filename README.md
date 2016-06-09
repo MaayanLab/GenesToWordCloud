@@ -1,2 +1,2 @@
-# Genes To Word Cloud
+# Genes2WordCloud
 
