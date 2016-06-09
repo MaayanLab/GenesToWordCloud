@@ -12,7 +12,7 @@ def process_text(text, **kwargs):
 	tokenize, stemmer, lemmantize '''
 	# https://github.com/wangz10/text-classification/blob/master/Main.ipynb
 
-	if kwargs.get('tokenize'):
+	if kwargs.get('tokenize') or type(text)==str:
 		tokenizer = RegexpTokenizer(r'\b\w{1,}\b')
 		words = tokenizer.tokenize(text)
 	else:
@@ -26,7 +26,7 @@ def process_text(text, **kwargs):
 		lmmr = WordNetLemmatizer()
 		words = lmmr.lemmantize(words)
 
-	return ' '.join(words)
+	return words
 
 def generate(text, **kwargs):
 	''' Generate the word cloud and pass the file pointer '''
@@ -78,4 +78,4 @@ def process_page(text, args):
 	g['width'] = min(config['word_cloud']['max_width'], int(args.get('width')))
 	g['height'] = min(config['word_cloud']['max_height'], int(args.get('height')))
 
-	return send_file(generate(process_text(text, **p), **d), mimetype='image/jpg')
+	return send_file(generate(process_text(text, **p), **g), mimetype='image/jpg')
