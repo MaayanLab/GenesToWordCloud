@@ -27,11 +27,6 @@ def process_text(text, **kwargs):
 
 	return ' '.join(words)
 
-def generate(text, **kwargs):
-	''' Generate the word cloud and pass the file pointer '''
-	# todo
-	pass
-
 def process_page(text, args):
 	g = {'stopwords': []}
 	p = {}
@@ -75,4 +70,4 @@ def process_page(text, args):
 	g['width'] = min(config['word_cloud']['max_width'], int(args.get('width')))
 	g['height'] = min(config['word_cloud']['max_height'], int(args.get('height')))
 
-	return send_file(generate(process_text(text, **p), **d), mimetype='image/jpg')
+	return process_text(text, **p)

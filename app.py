@@ -2,7 +2,7 @@ import urllib
 import pyodbc
 from bs4 import BeautifulSoup
 from flask import Flask, render_template, url_for, request
-from word_cloud import process_page
+from process import process_page
 from pubmed import pubmed_query
 from config import config
 
