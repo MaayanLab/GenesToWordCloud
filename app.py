@@ -39,19 +39,19 @@ def genes():
 	with con.cursor() as cur:
 		if source == "generif":
 			cur.execute('select generif, pmid from generif where ? order by random(), pmid limit ?', (gene_query, config['query_limit']))
-			text = ' '.join(pubmed_query(id=row['pmid']) for row in cur.fetchall())
+			text = [pubmed_query(id=row['pmid']) for row in cur.fetchall()]
 		elif source == 'pubmed':
 			cur.execute('select pmid from pmid_symbol where ? order by random() limit ?', (gene_query, config['query_limit']))
-			text = ' '.join(pubmed_query(id=row['pmid']) for row in cur.fetchall())
+			text = [pubmed_query(id=row['pmid']) for row in cur.fetchall()]
 		elif source == 'go':
 			cur.execute('select go, goID from go where ? order by random(), goID limit ?', (gene_query, config['query_limit']))
-			text = ' '.join(row['go'] for row in cur.fetchall())
+			text = [row['go'] for row in cur.fetchall()]
 		elif source == 'mp':
 			cur.execute('select mp, mpID from mp where ? order by random(), mp limit ?', (gene_query, config['query_limit']))
-			text = ' '.join(row['mp'] for row in cur.fetchall())
+			text = [row['mp'] for row in cur.fetchall()]
 		elif source == 'mesh_terms':
 			cur.execute('select pmid from pmid_symbol where ? order by random() limit ?', (gene_query, config['query_limit']))
-			text = ' '.join(pubmed_query(id=row['pmid']) for row in cur.fetchall())
+			text = [pubmed_query(id=row['pmid']) for row in cur.fetchall()]
 		else:
 			return error()
 	con.close()

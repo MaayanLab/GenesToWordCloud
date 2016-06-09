@@ -1,53 +1,58 @@
 {% extends "base.html" %}
-{% block head %}<title>Genes To World Cloud: Create {% block title %}{% endblock %}</title>{% endblock %}
+{% block head %}<title>Genes2WordCloud: Create {% block title %}{% endblock %}</title>{% endblock %}
 {% block body %}
 <h2>{% block header %}{% endblock %}</h2>
 <form method="post" action="javascript:void(0)" type="{{ cloud_type }}">
 	{% block form %}{% endblock %}
 	<p><br /></p>
-	<p class="input-field">
-		<input type="checkbox" id="stopwords" name="stopwords">
-		<label for="stopwords">Remove common English Words</label>
-	</p>
-	<p class="input-field">
-		<input type="checkbox" id="biostopwords" name="biostopwords">
-		<label for="biostopwords">Remove common Biological Terms</label>
-	</p>
-	<br />
-	<p class="input-field">
-		<select id="angler">
-			<option value="mostlyHoriz">Mostly Horizontal</option>
-			<option value="heaped">Heaped</option>
-			<option value="hexes">Hexes</option>
-			<option value="horiz">Horizontal</option>
-			<option value="random">Random</option>
-			<option value="updAndDown">Up And Down</option>
-		</select>
-		<label for="angler">Angle</label>
-	</p>
-	<p class="input-field">
-		<select id="placer">
-			<option value="centerClump">centerClump</option>
-			<option value="horizBandAnchoredLeft">horizBandAnchoredLeft</option>
-			<option value="horizLine">horizLine</option>
-			<option value="swirl">swirl</option>
-			<option value="upperLeft">upperLeft</option>
-			<option value="wave">wave</option>
-		</select>
-		<label for="placer">Placer</label>
-	</p>
-	<p class="input-field">
-		<select name="case" id="case">
-			<option value="lower">Lower Case</option>
-			<option value="upper">Upper Case</option>
-			<option value="first">First Letter Case</option>
-		</select>
-		<label for="case">Upper, lower, first case</label>
-	</p>
-	<p class="input-field">
-		<textarea name="blacklist" id="blacklist" class="materialize-textarea"></textarea>
-		<label for="blacklist">Blacklist keywords</label>
-	</p>
+	<div class="row">
+		<div class="input-field col s6">
+			<input type="checkbox" id="stopwords" name="stopwords">
+			<label for="stopwords">Remove common English Words</label>
+		</div>
+		<div class="input-field col s6">
+			<input type="checkbox" id="biostopwords" name="biostopwords">
+			<label for="biostopwords">Remove common Biological Terms</label>
+		</div>
+	</div>
+	<div class="row">
+		<div class="input-field col s12">
+			<input type="text" name="blacklist" id="blacklist">
+			<label for="blacklist">Blacklist keywords</label>
+		</div>
+	</div>
+	<div class="row">
+		<div class="input-field col s4">
+			<select id="angler">
+				<option value="mostlyHoriz">Mostly Horizontal</option>
+				<option value="heaped">Heaped</option>
+				<option value="hexes">Hexes</option>
+				<option value="horiz">Horizontal</option>
+				<option value="random">Random</option>
+				<option value="updAndDown">Up And Down</option>
+			</select>
+			<label for="angler">Angle</label>
+		</div>
+		<div class="input-field col s4">
+			<select id="placer">
+				<option value="centerClump">centerClump</option>
+				<option value="horizBandAnchoredLeft">horizBandAnchoredLeft</option>
+				<option value="horizLine">horizLine</option>
+				<option value="swirl">swirl</option>
+				<option value="upperLeft">upperLeft</option>
+				<option value="wave">wave</option>
+			</select>
+			<label for="placer">Placer</label>
+		</div>
+		<div class="input-field col s4">
+			<select id="case">
+				<option value="lower">Lower Case</option>
+				<option value="upper">Upper Case</option>
+				<option value="first">First Letter Case</option>
+			</select>
+			<label for="case">Upper, lower, first case</label>
+		</div>
+	</div>
 	<div class="row">
 		<div class="input-field col s6">
 			<input type="number" id="width" value="400">
@@ -58,7 +63,7 @@
 			<label for="height">Height</label>
 		</div>
 	</div>
-	<p class="input-field left"><input type="submit">&nbsp;<input type="button" id="save" value="Save"></p>
+	<div class="input-field center"><input type="submit">&nbsp;<input type="button" id="save" value="Save"></div>
 </form>
 <p><br /></p>
 <div class="container" id="view"></div>
