@@ -5,5 +5,5 @@ lxml
 nltk
 sklearn
 scipy
-pymysql
+pyodbc
 wordcloud
