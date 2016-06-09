@@ -43,10 +43,10 @@ def preprocess_text(text, strip_symbols=True, tokenize=None, stemmer=None, lemma
 
 def process_text(text, stopwords=[], **kwargs):
 	cv = CountVectorizer(min_df=1, max_df=100, analyzer='word', ngram_range=(1,2), stop_words=stopwords)
-	cv.fit(text)
+	r = cv.fit_transform([' '.join(text)])
 	return {
-		'max': max(map(int, cv.vocabulary_.values())),
-		'words': [{'text': str(word), 'freq': int(freq)} for word, freq in cv.vocabulary_.items()],
+		'max': r.max(),
+		'words': [{'text': str(word), 'freq': int(freq)} for word, freq in zip(cv.vocabulary_.keys(), r.roarray()[0])],
 	}
 
 def process_page(text, args):
