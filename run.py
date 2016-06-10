@@ -1,5 +1,6 @@
 #!/usr/local/bin/python3
 
+# generic command-line argument aprser
 import sys
 kargs, kwargs = [], {}
 for arg in sys.argv[1:]:
@@ -12,5 +13,6 @@ for arg in sys.argv[1:]:
 	else:
 		kargs.append(arg)
 
+# pass arguments and start flask app
 from app import app
 app.run(*kargs, **kwargs)

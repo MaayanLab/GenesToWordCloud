@@ -1,7 +1,9 @@
+'''
+Process functions for analyzing the text, processing it, and returning a json with the results
+'''
+
 import re
 import json
-from io import BytesIO
-from flask import send_file
 from nltk.tokenize import RegexpTokenizer
 from nltk.stem.porter import PorterStemmer
 from nltk.stem.wordnet import WordNetLemmatizer
@@ -42,14 +44,17 @@ def preprocess_text(text, strip_symbols=True, tokenize=None, stemmer=None, lemma
 	return words
 
 def process_text(text, stopwords=[], **kwargs):
+	''' Count the word frequencies and return a dict of the results '''
 	cv = CountVectorizer(min_df=1, max_df=100, analyzer='word', ngram_range=(1,2), stop_words=stopwords)
 	r = cv.fit_transform([' '.join(text)])
 	return {
 		'max': int(r.max()),
-		'words': [{'text': str(word), 'freq': int(freq)} for word, freq in zip(cv.vocabulary_.keys(), r.toarray()[0])],
+		'words': [{'text': str(word), 'freq': int(freq)}
+				  for word, freq in zip(cv.vocabulary_.keys(), r.toarray()[0])],
 	}
 
 def process_page(text, args):
+	''' Take text from app.py and GET args and feed it through processing steps '''
 	stopwords = []
 	if args.get('stopwords'):
 		stopwords += ENGLISH_STOP_WORDS
@@ -63,4 +68,4 @@ def process_page(text, args):
 			stopwords=stopwords))
 
 def error():
-	return json.dumps([])
+	return "[]"

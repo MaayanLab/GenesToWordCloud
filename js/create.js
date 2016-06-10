@@ -1,15 +1,19 @@
+// Create a word cloud with d3-cloud with keyword results from server
+
 var d3 = require('d3');
 var cloud = require('d3-cloud');
 
 var fill = d3.scale.category20();
+
+// Create the cloud with default options
 var layout = cloud()
 	.padding(5)
 	.fontSize(function(d) { return d.size; })
 	.on('end', draw);
 
-layout.start();
-
 function draw(words) {
+	// redraw the cloud layout
+
 	$('#view').empty();
 	d3.select($('#view').get(0))
 	  .append('svg')
@@ -32,6 +36,8 @@ function draw(words) {
 }
 
 function angler_lookup(angler) {
+	// return the rotation function for a specific angler option
+
 	if(angler == 'mostlyHoriz')
 		return function() { return (~~(Math.random() * 6) - 3) * 30; };
 	else if(angler == 'hexes')
@@ -48,28 +54,32 @@ function angler_lookup(angler) {
 
 $(document).ready(function() {
 	$('form').submit(function() {
+		// set new layout options
 		layout.stop()
 			  .size([Number($(this).find('#width').val()),
 					 Number($(this).find('#height').val())])
 			  .rotate(angler_lookup($(this).find('#angler').val()))
 			  .font('Impact');
-		// layout.font()
-		// $(this).find('#placer')
-		// layout.fontSize
-		// layout.spiral
+		// TODO: layout.font(), $(this).find('#placer'), layout.fontSize, layout.spiral
 
-		var url = $(this).attr('type');
-		$.get(window.location.origin+'/view/'+url, $(this).serialize())
+		// prepare GET url
+		var url = window.location.origin+'/view/'+$(this).attr('type');
+
+		// perform GET request
+		$.get(url, $(this).serialize())
 		 .done(function(data) {
-		 	data = JSON.parse(data);
-			layout.words(data['words'].map(function(d) {
+		 	data = JSON.parse(data); // parse the data
+			layout.words(data['words'].map(function(d) { // convert words dict to javascript object
 				return {text: d['text'], size: (d['freq']/data['max'])*24}
-			})).start();
+			})).start(); // start new layout
+
+			// warn user if d3-cloud didn't display all the text (which it does sometimes)
 			if($('#view').find('text').length < layout.words().length)
 				$('#view').append('<p>Note: Not all words could be displayed, make the canvas bigger.</p>');
 		});
 		// TODO: error handling
 	});
+
 	$('#save').click(function() {
 		// http://stackoverflow.com/questions/23218174/how-do-i-save-export-an-svg-file-after-creating-an-svg-with-d3-js-ie-safari-an
 		//get svg element.
@@ -91,4 +101,6 @@ $(document).ready(function() {
 		//open svg
 		window.open(url, '_blank');
 	});
+
+	layout.start(); // display the layout
 });
