@@ -25,8 +25,8 @@ function draw(words) {
 		.data(words)
 		.enter()
 	  .append('text')
-		.style('font-size', function(d) { return d.size + 'px'; })
-		.style('font-family', 'Impact')
+		.style('font-size', layout.fontSize())
+		.style('font-family', layout.font())
 		.style('fill', function(d, i) { return fill(i); })
 		.attr('text-anchor', 'middle')
 		.attr('transform', function(d) {
@@ -54,13 +54,28 @@ function angler_lookup(angler) {
 
 $(document).ready(function() {
 	$('form').submit(function() {
+		// load layout with new layout options
+
+		// canvas size
+		var width = Number($(this).find('#width').val()),
+			height = Number($(this).find('#height').val());
+
+		// font
+		var font = $(this).find('#font').val();
+
+		// font size
+		var font_size = $('#font-size').attr('value').split(',').map(Number);
+
+		// TODO: $(this).find('#placer'), layout.spiral
+
 		// set new layout options
 		layout.stop()
-			  .size([Number($(this).find('#width').val()),
-					 Number($(this).find('#height').val())])
+			  .size([width, height])
 			  .rotate(angler_lookup($(this).find('#angler').val()))
-			  .font('Impact');
-		// TODO: layout.font(), $(this).find('#placer'), layout.fontSize, layout.spiral
+			  .font(font)
+			  .fontSize(function(d) {
+				return (d.size*(font_size[1]-font_size[0])+font_size[0])+'px';
+			   });
 
 		// prepare GET url
 		var url = window.location.origin+'/view/'+$(this).attr('type');
@@ -68,9 +83,9 @@ $(document).ready(function() {
 		// perform GET request
 		$.get(url, $(this).serialize())
 		 .done(function(data) {
-		 	data = JSON.parse(data); // parse the data
+			data = JSON.parse(data); // parse the data
 			layout.words(data['words'].map(function(d) { // convert words dict to javascript object
-				return {text: d['text'], size: (d['freq']/data['max'])*24}
+				return {text: d['text'], size: (d['freq']/data['max'])}
 			})).start(); // start new layout
 
 			// warn user if d3-cloud didn't display all the text (which it does sometimes)
@@ -89,10 +104,10 @@ $(document).ready(function() {
 		var source = serializer.serializeToString(svg);
 		//add name spaces.
 		if(!source.match(/^<svg[^>]+xmlns="http\:\/\/www\.w3\.org\/2000\/svg"/)){
-		    source = source.replace(/^<svg/, '<svg xmlns="http://www.w3.org/2000/svg"');
+			source = source.replace(/^<svg/, '<svg xmlns="http://www.w3.org/2000/svg"');
 		}
 		if(!source.match(/^<svg[^>]+"http\:\/\/www\.w3\.org\/1999\/xlink"/)){
-		    source = source.replace(/^<svg/, '<svg xmlns:xlink="http://www.w3.org/1999/xlink"');
+			source = source.replace(/^<svg/, '<svg xmlns:xlink="http://www.w3.org/1999/xlink"');
 		}
 		//add xml declaration
 		source = '<?xml version="1.0" standalone="no"?>\r\n' + source;
