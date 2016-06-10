@@ -1,8 +1,8 @@
-flask
-pillow
 beautifulsoup4
+flask
 lxml
 nltk
-sklearn
+numpy
+pymysql
 scipy
-pyodbc
+sklearn

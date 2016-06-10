@@ -5,7 +5,10 @@ kargs, kwargs = [], {}
 for arg in sys.argv[1:]:
 	if arg.find('='):
 		k,v = arg.split('=', maxsplit=2)
-		kwargs[k] = v
+		try:
+			kwargs[k] = eval(v)
+		except:
+			kwargs[k] = v
 	else:
 		kargs.append(arg)
 

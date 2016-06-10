@@ -45,8 +45,8 @@ def process_text(text, stopwords=[], **kwargs):
 	cv = CountVectorizer(min_df=1, max_df=100, analyzer='word', ngram_range=(1,2), stop_words=stopwords)
 	r = cv.fit_transform([' '.join(text)])
 	return {
-		'max': r.max(),
-		'words': [{'text': str(word), 'freq': int(freq)} for word, freq in zip(cv.vocabulary_.keys(), r.roarray()[0])],
+		'max': int(r.max()),
+		'words': [{'text': str(word), 'freq': int(freq)} for word, freq in zip(cv.vocabulary_.keys(), r.toarray()[0])],
 	}
 
 def process_page(text, args):

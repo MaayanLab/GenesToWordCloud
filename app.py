@@ -1,5 +1,5 @@
 import urllib
-import pyodbc
+import pymysql
 from bs4 import BeautifulSoup
 from flask import Flask, render_template, url_for, request
 from process import process_page, error
@@ -35,7 +35,7 @@ def genes():
 	if not source:
 		return error()
 
-	con = pyodbc.connect(config['database'])
+	con = pymysql.connect(**config['database'])
 	with con.cursor() as cur:
 		if source == "generif":
 			cur.execute('select generif, pmid from generif where ? order by random(), pmid limit ?', (gene_query, config['query_limit']))
