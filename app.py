@@ -52,20 +52,20 @@ def genes():
 
 	# query source
 	if source == "generif":
-		cur.execute('select generif, pmid from generif '+where+' order by random(), pmid limit %s', (*genes, config['query_limit']))
-		text = ' '.join([pubmed_query(id=row['pmid']) for row in cur.fetchall()])
+		cur.execute('select generif, pmid from generif '+where+' order by rand(), pmid limit %s', (*genes, config['query_limit']))
+		text = ' '.join([pubmed_query(search=False, id=row['pmid']) for row in cur.fetchall()])
 	elif source == 'pubmed':
-		cur.execute('select pmid from pmid_symbol '+where+' order by random() limit %s', (*genes, config['query_limit']))
-		text = ' '.join([pubmed_query(id=row['pmid']) for row in cur.fetchall()])
+		cur.execute('select pmid from pmid_symbol '+where+' order by rand() limit %s', (*genes, config['query_limit']))
+		text = ' '.join([pubmed_query(search=False, id=row['pmid']) for row in cur.fetchall()])
 	elif source == 'go':
-		cur.execute('select go, goID from go '+where+' order by random(), goID limit %s', (*genes, config['query_limit']))
+		cur.execute('select go, goID from go '+where+' order by rand(), goID limit %s', (*genes, config['query_limit']))
 		text = ' '.join([row['go'] for row in cur.fetchall()])
 	elif source == 'mp':
-		cur.execute('select mp, mpID from mp '+where+' order by random(), mp limit %s', (*genes, config['query_limit']))
+		cur.execute('select mp, mpID from mp '+where+' order by rand(), mp limit %s', (*genes, config['query_limit']))
 		text = ' '.join([row['mp'] for row in cur.fetchall()])
 	elif source == 'mesh_terms':
-		cur.execute('select pmid from pmid_symbol where '+where+' order by random() limit %s', (*genes, config['query_limit']))
-		text = ' '.join([pubmed_query(id=row['pmid']) for row in cur.fetchall()])
+		cur.execute('select pmid from pmid_symbol where '+where+' order by rand() limit %s', (*genes, config['query_limit']))
+		text = ' '.join([pubmed_query(search=False, id=row['pmid']) for row in cur.fetchall()])
 	else:
 		return error()
 
