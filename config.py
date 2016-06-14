@@ -2,6 +2,7 @@
 Global application configuration options
 '''
 
+import json
 from pymysql.cursors import DictCursor
 
 config = {

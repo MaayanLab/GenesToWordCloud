@@ -1,38 +1,85 @@
 // Create a word cloud with d3-cloud with keyword results from server
+// https://github.com/shprink/d3js-wordcloud
 
+// Imports
 var d3 = require('d3');
 var cloud = require('d3-cloud');
 
-var fill = d3.scale.category20();
+// Properties
+var width = 960;
+var height = 600;
+var angler, spiral;
+var font, font_scale, font_size;
+var text_case, tags = [];
 
-// Create the cloud with default options
+
+var fill = d3.scale.category20b();
+var last_data, fontSize;
+
 var layout = cloud()
-	.padding(5)
-	.fontSize(function(d) { return d.size; })
-	.on('end', draw);
+	.timeInterval(Infinity)
+	.size([width, height])
+	.fontSize(function(d) {
+	    return fontSize(+d.value);
+	})
+	.text(function(d) {
+	    return d.key;
+	})
+	.on("end", draw);
 
-function draw(words) {
-	// redraw the cloud layout
+var svg = d3.select("#view").append("svg")
+    .attr("width", width)
+    .attr("height", height);
 
-	$('#view').empty();
-	d3.select($('#view').get(0))
-	  .append('svg')
-		.attr('width', layout.size()[0])
-		.attr('height', layout.size()[1])
-	  .append('g')
-		.attr('transform', 'translate(' + layout.size()[0] / 2 + ',' + layout.size()[1] / 2 + ')')
-	  .selectAll('text')
-		.data(words)
-		.enter()
-	  .append('text')
-		.style('font-size', layout.fontSize())
-		.style('font-family', layout.font())
-		.style('fill', function(d, i) { return fill(i); })
-		.attr('text-anchor', 'middle')
-		.attr('transform', function(d) {
-			return 'translate(' + [d.x, d.y] + ')rotate(' + d.rotate + ')';
-		})
-		.text(function(d) { return d.text; });
+var vis = svg.append("g").attr("transform", "translate(" + [width >> 1, height >> 1] + ")");
+
+function draw(data, bounds) {
+	var w = width,
+	    h = height;
+
+	svg.attr("width", w).attr("height", h);
+
+	scale = bounds ? Math.min(
+	        w / Math.abs(bounds[1].x - w / 2),
+	        w / Math.abs(bounds[0].x - w / 2),
+	        h / Math.abs(bounds[1].y - h / 2),
+	        h / Math.abs(bounds[0].y - h / 2)) / 2 : 1;
+
+	var text = vis.selectAll("text")
+	        .data(data, function(d) {
+	            return d.text;
+	        });
+	text.transition()
+	        .duration(1000)
+	        .attr("transform", function(d) {
+	            return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+	        })
+	        .style("font-size", function(d) {
+	            return d.size + "px";
+	        });
+	text.enter().append("text")
+	        .attr("text-anchor", "middle")
+	        .attr("transform", function(d) {
+	            return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+	        })
+	        .style("font-size", function(d) {
+	            return d.size + "px";
+	        })
+	        .style("opacity", 1e-6)
+	        .transition()
+	        .duration(1000)
+	        .style("opacity", 1);
+	text.style("font-family", function(d) {
+	    return d.font;
+	})
+	        .style("fill", function(d) {
+	            return fill(text_case(d.text));
+	        })
+	        .text(function(d) {
+	            return text_case(d.text);
+	        });
+
+	vis.transition().attr("transform", "translate(" + [w >> 1, h >> 1] + ")scale(" + scale + ")");
 }
 
 function angler_lookup(angler) {
@@ -52,47 +99,54 @@ function angler_lookup(angler) {
 		return function() { return Math.random() * 360; };
 }
 
+function case_lookup(c) {
+	// return the case function for the specified case
+	if(c == 'lower')
+		return function(t) { return t.toLowerCase(); };
+	else if(c == 'upper')
+		return function(t) { return t.toUpperCase(); };
+	else if(c == 'first')
+		return function(t) { return	t.charAt(0).toUpperCase() + t.slice(1).toLowerCase(); };
+}
+
+function update() {
+	width = Number($('#width').val());
+	height = Number($('#height').val());
+	angler = angler_lookup($('#angler').val());
+	spiral = $('#spiral').val();
+	text_case = case_lookup($('#case').val());
+	font = $('#font').val();
+	font_scale = $('#font-scale').val();
+	font_size = $('#font-size').attr('value').split(',').map(Number);
+
+    layout.font(font).spiral('archimedean');
+    fontSize = d3.scale[font_scale]().range([font_size[0], font_size[1]]);
+    if(tags.length)
+        fontSize.domain([+tags[tags.length - 1].value || 1, +tags[0].value]);
+    layout.stop().words(tags).start();
+}
+
 $(document).ready(function() {
 	$('form').submit(function() {
-		// load layout with new layout options
-
-		// canvas size
-		var width = Number($(this).find('#width').val()),
-			height = Number($(this).find('#height').val());
-
-		// font
-		var font = $(this).find('#font').val();
-
-		// font size
-		var font_size = $('#font-size').attr('value').split(',').map(Number);
-
-		// TODO: $(this).find('#placer'), layout.spiral
-
-		// set new layout options
-		layout.stop()
-			  .size([width, height])
-			  .rotate(angler_lookup($(this).find('#angler').val()))
-			  .font(font)
-			  .fontSize(function(d) {
-				return (d.size*(font_size[1]-font_size[0])+font_size[0])+'px';
-			   });
-
 		// prepare GET url
 		var url = window.location.origin+'/view/'+$(this).attr('type');
 
-		// perform GET request
-		$.get(url, $(this).serialize())
-		 .done(function(data) {
-			data = JSON.parse(data); // parse the data
-			layout.words(data['words'].map(function(d) { // convert words dict to javascript object
-				return {text: d['text'], size: (d['freq']/data['max'])}
-			})).start(); // start new layout
+		data = $(this).serialize();
+		if(last_data != data) {
+			last_data = data;
 
-			// warn user if d3-cloud didn't display all the text (which it does sometimes)
-			if($('#view').find('text').length < layout.words().length)
-				$('#view').append('<p>Note: Not all words could be displayed, make the canvas bigger.</p>');
-		});
-		// TODO: error handling
+			// perform GET request
+			$.get(url, data)
+			 .done(function(data) {
+				tags = JSON.parse(data).map(function(d) { // convert words dict to javascript object tags
+					return {key: d['text'], value: d['freq']};
+				});
+				update();
+			});
+			// TODO: error handling
+		}
+		else
+			update();
 	});
 
 	$('#save').click(function() {
@@ -116,6 +170,4 @@ $(document).ready(function() {
 		//open svg
 		window.open(url, '_blank');
 	});
-
-	layout.start(); // display the layout
 });

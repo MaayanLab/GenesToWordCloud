@@ -46,12 +46,9 @@ def preprocess_text(text, strip_symbols=True, tokenize=None, stemmer=None, lemma
 def process_text(text, stopwords=[], **kwargs):
 	''' Count the word frequencies and return a dict of the results '''
 	cv = CountVectorizer(min_df=1, max_df=100, analyzer='word', ngram_range=(1,2), stop_words=stopwords)
-	r = cv.fit_transform([' '.join(text)])
-	return {
-		'max': int(r.max()),
-		'words': [{'text': str(word), 'freq': int(freq)}
-				  for word, freq in zip(cv.vocabulary_.keys(), r.toarray()[0])],
-	}
+	r = cv.fit_transform([' '.join(text)]).toarray()[0]
+	return [{'text': str(word), 'freq': int(freq)}
+			 for word, freq in zip(cv.vocabulary_.keys(), r)]
 
 def process_page(text, args):
 	''' Take text from app.py and GET args and feed it through processing steps '''

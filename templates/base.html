@@ -10,22 +10,24 @@
   {% block head %}{% endblock %}
 </head>
 <body>
-  <ul id="create-dropdown" class="dropdown-content">
+  {% set create_menu %}
     <li><a href="/create/genes">Genes</a></li>
     <li><a href="/create/free_text">Free Text</a></li>
     <li><a href="/create/url">URL</a></li>
     <li><a href="/create/author">Author</a></li>
     <li><a href="/create/pubmed">Pubmed Search</a></li>
-  </ul>
-  
-  <ul id="help-dropdown" class="dropdown-content">
+  {% endset %}
+  {% set help_menu %}
     <li><a href="/help#introduction">Introduction</a></li>
     <li><a href="/help#structure">Structure</a></li>
     <li><a href="/help#examples">Examples</a></li>
     <li><a href="/help#troubleshooting">Troubleshooting</a></li>
     <li><a href="/help#faq">FAQ</a></li>
     <li><a href="/help#contact">Contact</a></li>
-  </ul>
+  {% endset %}
+
+  <ul id="create-dropdown" class="dropdown-content">{{ create_menu|safe }}</ul>
+  <ul id="help-dropdown" class="dropdown-content">{{ help_menu|safe }}</ul>
 
   <nav class="light-red" role="navigation">
     <div class="nav-wrapper">
@@ -44,13 +46,7 @@
         <li class="bold">
           <div class="collapsible-header">Create</div>
           <div class="collapsible-body">
-            <ul>
-              <li><a href="/create/genes">Genes</a></li>
-              <li><a href="/create/free_text">Free Text</a></li>
-              <li><a href="/create/url">URL</a></li>
-              <li><a href="/create/author">Author</a></li>
-              <li><a href="/create/pubmed">Pubmed Search</a></li>
-            </ul>
+            <ul>{{ create_menu|safe }}</ul>
           </div>
         </li>
       </ul>
@@ -60,23 +56,16 @@
         <li class="bold">
           <div class="collapsible-header">Help</div>
           <div class="collapsible-body">
-            <ul>
-              <li><a href="/help#introduction">Introduction</a></li>
-              <li><a href="/help#structure">Structure</a></li>
-              <li><a href="/help#examples">Examples</a></li>
-              <li><a href="/help#troubleshooting">Troubleshooting</a></li>
-              <li><a href="/help#faq">FAQ</a></li>
-              <li><a href="/help#contact">Contact</a></li>
-            </ul>
+            <ul>{{ help_menu|safe }}</ul>
           </div>
         </li>
       </ul>
     </li>
   </ul>
 
-  <div class="container" id="body">
+  <main class="container">
   {% block body %}{% endblock %}
-  </div>
+  </main>
 
   <footer class="page-footer light-red">
     <div class="container">
