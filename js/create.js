@@ -85,16 +85,16 @@ function draw(data, bounds) {
 function angler_lookup(angler) {
 	// return the rotation function for a specific angler option
 
-	if(angler == 'mostlyHoriz')
+	if(angler == 'default')
 		return function() { return (~~(Math.random() * 6) - 3) * 30; };
-	else if(angler == 'hexes')
-		return function() { return ~~(Math.random() * 2) * 45; };
-	else if(angler == 'heaped')
-		return function() { return ~~(Math.random() * 2) * 90; };
-	else if(angler == 'horiz')
+	else if(angler == 'horizontal')
 		return 0;
-	else if(angler == 'updAndDown')
+	else if(angler == 'vertical')
 		return 90;
+	else if(angler == 'grid')
+		return function() { return ~~(Math.random() * 2) * 90; };
+	else if(angler == 'diagonal')
+		return function() { return ~~(Math.random() * 8) * 45; };
 	else if(angler == 'random')
 		return function() { return Math.random() * 360; };
 }
@@ -119,11 +119,11 @@ function update() {
 	font_scale = $('#font-scale').val();
 	font_size = $('#font-size').attr('value').split(',').map(Number);
 
-    layout.font(font).spiral('archimedean');
+    layout.font(font).spiral(spiral);
     fontSize = d3.scale[font_scale]().range([font_size[0], font_size[1]]);
     if(tags.length)
         fontSize.domain([+tags[tags.length - 1].value || 1, +tags[0].value]);
-    layout.stop().words(tags).start();
+    layout.stop().words(tags).rotate(angler).start();
 }
 
 $(document).ready(function() {

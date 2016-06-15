@@ -24,12 +24,12 @@
 	<div class="row">
 		<div class="input-field col s4">
 			<select id="angler">
-				<option value="mostlyHoriz">Mostly Horizontal</option>
-				<option value="heaped">Heaped</option>
-				<option value="hexes">Hexes</option>
-				<option value="horiz">Horizontal</option>
+				<option value="default">Default</option>
+				<option value="horizontal">Horizontal</option>
+				<option value="vertical">Vertical</option>
+				<option value="grid">Grid</option>
+				<option value="diagonal">Diagonal</option>
 				<option value="random">Random</option>
-				<option value="updAndDown">Up And Down</option>
 			</select>
 			<label for="angler">Angle</label>
 		</div>
@@ -66,14 +66,14 @@
 		</div>
 		<div class="input-field col s4">
 			<select id="font-scale">
-				<option value="sqrt">n</option>
+				<option value="ordinal">n</option>
 				<option value="log">log n</option>
 				<option value="sqrt">&radic;n</option>
 			</select>
 			<label for="font-scale">Font Scale</label>
 		</div>
 		<div class="input-field col s4">
-			<div class="noUiSlider" id="font-size" min="0" max="250" start="[5, 32]"></div>
+			<div class="noUiSlider" id="font-size" min="0" max="250" start="[10, 100]"></div>
 			<label for="font-size">Font Size Range</label>
 		</div>
 	</div>
