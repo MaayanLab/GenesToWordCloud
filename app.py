@@ -3,12 +3,12 @@ Inform flask of the different pages available and do some basic preparation for 
 '''
 
 import urllib
-import pymysql
 from bs4 import BeautifulSoup
 from flask import Flask, render_template, url_for, request
 from process import process_page, error
 from pubmed import pubmed_query
 from config import config
+from database import tables
 
 app = Flask(__name__, static_folder='static')
 
@@ -33,45 +33,21 @@ def route_page(func):
 
 @route_page
 def genes():
-	''' MySQL database lookup for gene names '''
+	''' Database lookup for gene names '''
 	genes = request.args.get('genes')
 	if not genes:
 		return error()
 	genes = genes.split()
 
-	# prepare where clause
-	where = 'where '+' or '.join(['geneName=%s' for gene in genes])
-
 	source = request.args.get('source')
 	if not source:
 		return error()
 
-	# connect to database
-	con = pymysql.connect(**config['database'])
-	cur = con.cursor()
-
-	# query source
-	if source == "generif":
-		cur.execute('select generif, pmid from generif '+where+' order by rand(), pmid limit %s', (*genes, config['query_limit']))
-		text = ' '.join([pubmed_query(search=False, id=row['pmid']) for row in cur.fetchall()])
-	elif source == 'pubmed':
-		cur.execute('select pmid from pmid_symbol '+where+' order by rand() limit %s', (*genes, config['query_limit']))
-		text = ' '.join([pubmed_query(search=False, id=row['pmid']) for row in cur.fetchall()])
-	elif source == 'go':
-		cur.execute('select go, goID from go '+where+' order by rand(), goID limit %s', (*genes, config['query_limit']))
-		text = ' '.join([row['go'] for row in cur.fetchall()])
-	elif source == 'mp':
-		cur.execute('select mp, mpID from mp '+where+' order by rand(), mp limit %s', (*genes, config['query_limit']))
-		text = ' '.join([row['mp'] for row in cur.fetchall()])
-	elif source == 'mesh_terms':
-		cur.execute('select pmid from pmid_symbol where '+where+' order by rand() limit %s', (*genes, config['query_limit']))
-		text = ' '.join([pubmed_query(search=False, id=row['pmid']) for row in cur.fetchall()])
-	else:
+	table = tables.get(source)
+	if not table:
 		return error()
 
-	con.close()
-
-	return process_page(text, request.args)
+	return process_page(list(table(genes)), request.args)
 
 @route_page
 def free_text():
