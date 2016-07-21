@@ -1,5 +1,3 @@
-#!/usr/local/bin/python3
-
 # generic command-line argument aprser
 import sys
 kargs, kwargs = [], {}
