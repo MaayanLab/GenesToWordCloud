@@ -1,5 +1,7 @@
 {% extends "base.html" %}
-{% block head %}<title>Genes2WordCloud: Create {% block title %}{% endblock %}</title>{% endblock %}
+{% block head %}
+	<title>Genes2WordCloud: Create {% block title %}{% endblock %}</title>
+{% endblock %}
 {% block body %}
 <h2>{% block header %}{% endblock %}</h2>
 <form method="post" action="javascript:void(0)" type="{{ cloud_type }}">
@@ -22,25 +24,29 @@
 		</div>
 	</div>
 	<div class="row">
-		<div class="input-field col s4">
-			<select id="angler">
-				<option value="default">Default</option>
-				<option value="horizontal">Horizontal</option>
-				<option value="vertical">Vertical</option>
-				<option value="grid">Grid</option>
-				<option value="diagonal">Diagonal</option>
-				<option value="random">Random</option>
-			</select>
-			<label for="angler">Angle</label>
+		<div class="input-field col s6">
+			<input type="number" id="width" value="960">
+			<label for="width">Width</label>
 		</div>
-		<div class="input-field col s4">
-			<select id="spiral">
-				<option value="archimedean">Archimedean</option>
-				<option value="rectangular">Rectangular</option>
-			</select>
-			<label for="spiral">Spiral</label>
+		<div class="input-field col s6">
+			<input type="number" id="height" value="600">
+			<label for="height">Height</label>
 		</div>
-		<div class="input-field col s4">
+	</div>
+	<div class="row">
+		<div class="input-field col s6">
+			<select id="shape">
+				<option value="circle">Circle</option>
+				<option value="cardioid">Cardioid</option>
+				<option value="diamond">Diamond</option>
+				<option value="triangle-forward">Triangle Forward</option>
+				<option value="triangle-upright">Triangle</option>
+				<option value="pentagon">Pentagon</option>
+				<option value="star">Star</option>
+			</select>
+			<label for="shape">Shape</label>
+		</div>
+		<div class="input-field col s6">
 			<select id="case">
 				<option value="lower">Lower Case</option>
 				<option value="upper">Upper Case</option>
@@ -51,12 +57,12 @@
 	</div>
 	<div class="row">
 		<div class="input-field col s6">
-			<input type="number" id="width" value="960">
-			<label for="width">Width</label>
+			<div class="noUiSlider" id="rotation-proba" max="1" start="0.5" step="0.01" fmt="2"></div>
+			<label for="rotation-proba">Rotation Probability</label>
 		</div>
 		<div class="input-field col s6">
-			<input type="number" id="height" value="600">
-			<label for="height">Height</label>
+			<div class="noUiSlider" id="rotation" connect="true" max="360" start="[0, 90]"></div>
+			<label for="rotation">Rotation Range</label>
 		</div>
 	</div>
 	<div class="row">
@@ -73,13 +79,16 @@
 			<label for="font-scale">Font Scale</label>
 		</div>
 		<div class="input-field col s4">
-			<div class="noUiSlider" id="font-size" min="0" max="250" start="[10, 100]"></div>
+			<div class="noUiSlider" id="font-size" connect="true" min="1" max="250" start="[10, 100]"></div>
 			<label for="font-size">Font Size Range</label>
 		</div>
 	</div>
 	<div class="input-field center"><input type="submit">&nbsp;<input type="button" id="save" value="Save"></div>
 </form>
 <p><br /></p>
-<div id="view"></div>
+<div id="view" style="width:100%;position:relative;"></div>
 {% endblock %}
-{% block script %}<script src="/static/js/create.js"></script>{% endblock %}
+{% block script %}
+	<script src="/static/js/wordcloud2.js"></script>
+	<script src="/static/js/create.js"></script>
+{% endblock %}
