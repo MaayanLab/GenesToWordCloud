@@ -47,7 +47,7 @@ def genes():
 	if not table:
 		return error()
 
-	return process_page(list(table(genes)), request.args)
+	return process_page(' '.join(table(genes)), request.args)
 
 @route_page
 def free_text():
@@ -72,7 +72,7 @@ def url():
 			elem.extract()
 
 	# extract text from the page
-	text = soup.findAll(text=True)
+	text = ' '.join(soup.findAll(text=True))
 
 	return process_page(text, request.args)
 
@@ -89,7 +89,3 @@ def pubmed():
 	if not keyword:
 		return error()
 	return process_page(pubmed_query(term=keyword), request.args)
-
-	# todo: get pubmed IDs from bmc page
-	# we might need to be logged in for this to work
-	pass

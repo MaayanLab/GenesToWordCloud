@@ -9,11 +9,11 @@ from pubmed import pubmed_query
 def query(what, table, genes):
 	con = pymysql.connect(**config['database'])
 	cur = con.cursor()
-	cur.execute('select '
-		+(','.join(what) if type(what)==list else what)
-		+' from '+table
-		+' where '+(' or '.join(['geneName=%s' for gene in genes]))
-		+' order by rand() limit '+str(config['query_limit']), genes)
+	cur.execute('select %s from %s where %s order by rand() limit %s' % (
+		','.join(['`%s`' % (w) for w in what]) if type(what)==list else '`%s`' % (what),
+		'`%s`' % (table),
+		' or '.join(['`geneName` = %s' for gene in genes]), # put %s for statement preparation
+		str(config['query_limit'])), genes)
 	return cur.fetchall()
 
 
@@ -43,6 +43,6 @@ def go(genes):
 @register_table
 def mp(genes):
 	''' TODO '''
-	for row in query('mp, mpID', 'mp', genes):
+	for row in query(['mp', 'mpID'], 'mp', genes):
 		yield(row['mp'])
 		# TODO: yield(mp_query(id=row['mpID']))

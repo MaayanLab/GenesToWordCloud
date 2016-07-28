@@ -1,4 +1,5 @@
 var view = $('#view');
+var state = $('#status');
 
 // Properties
 var width = 960;
@@ -24,9 +25,6 @@ function draw() {
 		maxRotation: rotation[1],
 		shape: shape
 	});
-	// TODO: wordcloudstart
-	// TODO: wordclouddrawn
-	// TODO: wordcloudstop
 }
 
 function scale_lookup(scale) {
@@ -82,15 +80,27 @@ $(document).ready(function() {
 			last_data = data;
 
 			// perform GET request
+			state.text("Processing...");
 			$.get(url, data)
 			 .done(function(data) {
 				tags = JSON.parse(data);
+			}).fail(function() {
+				state.text("Couldn't communicate with server");
+			}).done(function() {
+				state.text("");
 				update();
 			});
-			// TODO: request error handling
 		}
 		else
 			update();
+	});
+
+	view.on('wordcloudstart', function() {
+		state.text("Generating Wordcloud...");
+	});
+
+	view.on('wordclouddrawn', function() {
+		state.text("");
 	});
 
 	$('#save').click(function() {

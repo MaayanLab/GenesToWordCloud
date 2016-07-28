@@ -8,45 +8,35 @@ from nltk.tokenize import RegexpTokenizer
 from nltk.stem.porter import PorterStemmer
 from nltk.stem.wordnet import WordNetLemmatizer
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
-from sklearn.feature_extraction.stop_words import ENGLISH_STOP_WORDS
 from config import config
 
-def preprocess_text(text, strip_symbols=True, tokenize=None, stemmer=None, lemmantize=None, case=None, **kwargs):
-	''' Process text pipeline, accepts different nlp flags
-	tokenize, stemmer, lemmantize '''
-	# https://github.com/wangz10/text-classification/blob/master/Main.ipynb
+def tokenize_text(text):
+	tokenizer = RegexpTokenizer(r'\b\w{1,}\b')
+	return tokenizer.tokenize(text)
 
-	if tokenize or type(text) == str:
-		tokenizer = RegexpTokenizer(r'\b\w{1,}\b')
-		words = tokenizer.tokenize(text)
-	else:
-		words = text
+def strip_text(words):
+	for word in words:
+		w = re.sub(r'[^\w]','',word).strip()
+		if w:
+			yield(w)
 
-	if strip_symbols:
-		words = list(filter(None, [re.sub(r'[^\w]','',word).strip() for word in words]))
+def lemmatize_text(words):
+	lmmr = WordNetLemmatizer()
+	for word in words:
+		yield(lmmr.lemmatize(word))
 
-	if case:
-		words = list(
-			map({
-				'lower': str.lower,
-				'upper': str.upper,
-				'first': str.capitalize,
-			}.get(case), words))
+def preprocess_text(text):
+	return lemmatize_text(strip_text(tokenize_text(text)))
 
-	if stemmer:
-		stemmer = PorterStemmer()
-		words = stemmer.stem(words)
-
-	if lemmantize:
-		lmmr = WordNetLemmatizer()
-		words = lmmr.lemmantize(words)
-
-	return words
-
-def process_text(text, stopwords=[], **kwargs):
+def process_text(text, **kwargs):
 	''' Count the word frequencies and return a dict of the results '''
-	cv = CountVectorizer(min_df=1, max_df=100, analyzer='word', ngram_range=(1,2), stop_words=stopwords)
-	r = cv.fit_transform([' '.join(text)]).toarray()[0]
+	cv = CountVectorizer( # TfidfVectorizer
+		min_df=1, max_df=100,
+		analyzer='word',
+		tokenizer=preprocess_text,
+		strip_accents='unicode',
+		**kwargs) #  ngram_range=(1,2),
+	r = cv.fit_transform([text]).toarray()[0]
 	return sorted(
 		[[str(word), int(freq)]
 		 for word, freq in zip(cv.vocabulary_.keys(), r)
@@ -57,15 +47,12 @@ def process_page(text, args):
 	''' Take text from app.py and GET args and feed it through processing steps '''
 	stopwords = []
 	if args.get('stopwords'):
-		stopwords += ENGLISH_STOP_WORDS
+		stopwords += map(str.strip, open('static/stopwords.txt', 'r').readlines())
 	if args.get('biostopwords'):
-		stopwords += open('static/biostopwords.txt', 'r').readlines()
+		stopwords += map(str.strip, open('static/biostopwords.txt', 'r').readlines())
 	if args.get('blacklist'):
-		stopwords += args['blacklist'].split()
-	return json.dumps(
-		process_text(
-			preprocess_text(text, case=args.get('case')),
-			stopwords=stopwords))
+		stopwords += map(str.strip, args['blacklist'].split())
+	return json.dumps(process_text(text, stop_words=stopwords))
 
 def error():
 	return "[]"

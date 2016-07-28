@@ -9,7 +9,7 @@
 	<p><br /></p>
 	<div class="row">
 		<div class="input-field col s6">
-			<input type="checkbox" id="stopwords" name="stopwords">
+			<input type="checkbox" id="stopwords" name="stopwords" checked>
 			<label for="stopwords">Remove common English Words</label>
 		</div>
 		<div class="input-field col s6">
@@ -65,6 +65,7 @@
 			<label for="rotation">Rotation Range</label>
 		</div>
 	</div>
+	<br />
 	<div class="row">
 		<div class="input-field col s4">
 			<input type="text" id="font" value="Impact">
@@ -86,6 +87,7 @@
 	<div class="input-field center"><input type="submit">&nbsp;<input type="button" id="save" value="Save"></div>
 </form>
 <p><br /></p>
+<div id="status"></div>
 <div id="view" style="width:100%;position:relative;"></div>
 {% endblock %}
 {% block script %}
