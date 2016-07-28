@@ -39,8 +39,7 @@ def process_text(text, **kwargs):
 	r = cv.fit_transform([text]).toarray()[0]
 	return sorted(
 		[[str(word), int(freq)]
-		 for word, freq in zip(cv.vocabulary_.keys(), r)
-		 if freq > r.mean() - r.std()],
+		 for word, freq in zip(cv.vocabulary_.keys(), r)],
 		 key=lambda p: p[1], reverse=True)
 
 def process_page(text, args):

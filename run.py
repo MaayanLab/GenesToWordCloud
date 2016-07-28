@@ -1,13 +1,15 @@
 # generic command-line argument aprser
-import sys
+import sys, json
+def json_or_str(v):
+	try:
+		return json.loads(v)
+	except:
+		return str(v)
 kargs, kwargs = [], {}
 for arg in sys.argv[1:]:
 	if arg.find('='):
 		k,v = arg.split('=', maxsplit=2)
-		try:
-			kwargs[k] = eval(v)
-		except:
-			kwargs[k] = v
+		kwargs[json_or_str(k)] = json_or_str(v)
 	else:
 		kargs.append(arg)
 

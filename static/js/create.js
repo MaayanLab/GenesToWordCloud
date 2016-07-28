@@ -4,7 +4,7 @@ var state = $('#status');
 // Properties
 var width = 960;
 var height = 600;
-var rotation, rotation_proba, shape;
+var rotation, rotation_proba, shape, grid_size;
 var font, font_scale, font_size;
 var text_case, tags = [], freqs = [];
 
@@ -18,32 +18,13 @@ function draw() {
 		shuffle: true,
 		list: tags.map(function(t) { return [text_case(t[0]), t[1]] }),
 		fontFamily: font,
-		gridSize: Math.round(16 * $('#view').width() / 1024), // TODO?
-		weightFactor: function (size) { return font_scale(size / max_freq); },
+		gridSize: grid_size,
+		weightFactor: function (size) { return font_size[0] + Math.pow(size / max_freq, font_scale) * (font_size[1] - font_size[0]); },
 		rotateRatio: rotation_proba,
 		minRotation: rotation[0],
 		maxRotation: rotation[1],
 		shape: shape
 	});
-}
-
-function scale_lookup(scale) {
-	if(scale == 'ordinal') {
-		return function (s) {
-			return font_size[0] + s * (font_size[1]-font_size[0]);
-		};
-	}
-	else if(scale == 'log') {
-		return function (s) {
-			var r = font_size[1] / font_size[0];
-			return font_size[0] + Math.log(1 + s * (r - 1)) / Math.log(r) * (font_size[1] - font_size[0]);
-		};
-	}
-	else if(scale == 'sqrt') {
-		return function (s) {
-			return font_size[0] + Math.sqrt(s) * (font_size[1] - font_size[0]);
-		};
-	}
 }
 
 function case_lookup(c) {
@@ -62,9 +43,10 @@ function update() {
 	rotation = $('#rotation').attr('value').split(',').map(function(d) { return Number(d)*Math.PI/180; } );
 	rotation_proba = Number($('#rotation-proba').attr('value'));
 	shape = $('#shape').val();
+	grid_size = Number($('#grid-size').attr('value'));
 	text_case = case_lookup($('#case').val());
 	font = $('#font').val();
-	font_scale = scale_lookup($('#font-scale').val());
+	font_scale = Number($('#font-scale').attr('value'));
 	font_size = $('#font-size').attr('value').split(',').map(Number);
 
 	if(tags.length)
