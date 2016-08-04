@@ -772,9 +772,9 @@ if (!window.clearImmediate) {
           if (info.mu !== 1) {
             transformRule +=
               'translateX(-' + (info.fillTextWidth / 4) + ') ' +
-              'scale(' + (1 / mu) + ' ' + (1 / info.mu) + ')';
+              'scale(' + (1 / mu) + ' ' + (1 / mu) + ')';
           }
-          transformRule += 'translate(0 ' + ((info.fillTextOffsetY + fontSize * 0.5) * mu) + ')';
+          transformRule += 'translate(0 ' + ((info.fillTextOffsetY + fontSize * 0.6) * mu) + ')';
 
           attributes.transform = transformRule;
           var styleRules = {
