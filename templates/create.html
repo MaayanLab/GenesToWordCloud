@@ -8,13 +8,17 @@
 	{% block form %}{% endblock %}
 	<p><br /></p>
 	<div class="row">
-		<div class="input-field col s6">
+		<div class="input-field col s4">
 			<input type="checkbox" id="stopwords" name="stopwords" checked>
 			<label for="stopwords">Remove common English Words</label>
 		</div>
-		<div class="input-field col s6">
+		<div class="input-field col s4">
 			<input type="checkbox" id="biostopwords" name="biostopwords">
 			<label for="biostopwords">Remove common Biological Terms</label>
+		</div>
+		<div class="input-field col s4">
+			<div class="noUiSlider" id="threshold" start="1" min="-5" max="5" step="0.01" fmt="2"></div>
+			<label for="threshold">Frequency Significance</label>
 		</div>
 	</div>
 	<div class="row">

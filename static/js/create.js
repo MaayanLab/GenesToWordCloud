@@ -6,12 +6,11 @@ var width = 960;
 var height = 600;
 var rotation, rotation_proba, shape, grid_size;
 var font, font_scale, font_size;
-var text_case, tags = [], freqs = [];
-
+var text_case, tags = [], threshold;
+var max_freq;
 var last_data, fontSize;
 
 function draw() {
-	var max_freq = Math.max.apply(Math, tags.map(function(d) { return d[1]; }));
 	view.height(height * view.width() / width);
 	view[0].setAttribute('viewBox', '0 0 '+width+' '+height);
 	WordCloud(view[0], {
@@ -19,7 +18,11 @@ function draw() {
 		height: height,
 		shuffle: true,
 		backgroundColor: 'rgba(255, 255, 255, 0)',
-		list: tags.map(function(t) { return [text_case(t[0]), t[1]] }),
+		list: tags.filter(function(t) {
+			return t[1] > threshold;
+		}).map(function(t) {
+			return [text_case(t[0]), t[1]]
+		}),
 		fontFamily: font,
 		gridSize: grid_size,
 		weightFactor: function (size) { return font_size[0] + Math.pow(size / max_freq, font_scale) * (font_size[1] - font_size[0]); },
@@ -51,6 +54,7 @@ function update() {
 	font = $('#font').val();
 	font_scale = Number($('#font-scale').attr('value'));
 	font_size = $('#font-size').attr('value').split(',').map(Number);
+	threshold = Number($('#threshold').attr('value'));
 
 	if(tags.length)
 		draw();
@@ -70,6 +74,7 @@ $(document).ready(function() {
 			$.get(url, data)
 			 .done(function(data) {
 				tags = JSON.parse(data);
+				max_freq = Math.max.apply(Math, tags.map(function(d) { return d[1]; }));
 			}).fail(function() {
 				state.text("Couldn't communicate with server");
 			}).done(function() {
@@ -88,6 +93,10 @@ $(document).ready(function() {
 	view.on('wordclouddrawn', function() {
 		state.text("");
 	});
+
+	view.on('wordcloudabort', function() {
+		state.text("NOTE: A word was unable to be placed, try adjusting settings so you don't miss it.");
+	})
 
 	$('#save').click(function() {
 		// modified from http://stackoverflow.com/questions/23218174/how-do-i-save-export-an-svg-file-after-creating-an-svg-with-d3-js-ie-safari-an

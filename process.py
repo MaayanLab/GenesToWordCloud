@@ -40,9 +40,10 @@ def process_text(text, **kwargs):
 		strip_accents='unicode',
 		**kwargs) #  ngram_range=(1,2),
 	r = cv.fit_transform([text]).toarray()[0]
+	m, s = r.mean(), r.std()
 	return sorted(
-		[[str(word), int(freq)]
-		 for word, freq in zip(cv.vocabulary_.keys(), r)],
+		[[str(word), float((r[ind] - m) / s)]
+		 for word, ind in cv.vocabulary_.items()],
 		 key=lambda p: p[1], reverse=True)
 
 def process_page(text, args):
