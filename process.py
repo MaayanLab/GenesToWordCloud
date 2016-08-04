@@ -12,7 +12,7 @@ from config import config
 
 def tokenize_text(text):
 	tokenizer = RegexpTokenizer(r'\b\w{2,}\b')
-	return tokenizer.tokenize(text)
+	return tokenizer.tokenize(text.lower())
 
 def strip_text(words):
 	for word in words:
@@ -53,8 +53,8 @@ def process_page(text, args):
 		stopwords += map(str.strip, open('static/stopwords.txt', 'r').readlines())
 	if args.get('biostopwords'):
 		stopwords += map(str.strip, open('static/biostopwords.txt', 'r').readlines())
-	if args.get('blacklist'):
-		stopwords += map(str.strip, args['blacklist'].split())
+	if args.get('customstopwords'):
+		stopwords += map(str.strip, args['customstopwords'].split())
 	return json.dumps(process_text(text, stop_words=stopwords))
 
 def error():
