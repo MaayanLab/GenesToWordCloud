@@ -11,14 +11,17 @@ from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 from config import config
 
 def tokenize_text(text):
-	tokenizer = RegexpTokenizer(r'\b\w{1,}\b')
+	tokenizer = RegexpTokenizer(r'\b\w{2,}\b')
 	return tokenizer.tokenize(text)
 
 def strip_text(words):
 	for word in words:
 		w = re.sub(r'[^\w]','',word).strip()
 		if w:
-			yield(w)
+			try: # Remove pure numbers
+				int(w)
+			except:
+				yield(w)
 
 def lemmatize_text(words):
 	lmmr = WordNetLemmatizer()

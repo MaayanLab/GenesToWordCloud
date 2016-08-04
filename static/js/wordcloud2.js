@@ -209,7 +209,10 @@ if (!window.clearImmediate) {
       classes: null,
 
       hover: null,
-      click: null
+      click: null,
+
+      width: null,
+      height: null
     };
 
     if (options) {
@@ -679,6 +682,14 @@ if (!window.clearImmediate) {
       return true;
     };
 
+    /* Make svg workaround */
+    function makeSVG(tag, attrs) {
+        var el= document.createElementNS('http://www.w3.org/2000/svg', tag);
+        for (var k in attrs)
+            el.setAttribute(k, attrs[k]);
+        return el;
+    }
+
     /* Actually draw the text on the grid */
     var drawText = function drawText(gx, gy, info, word, weight,
                                      distance, theta, rotateDeg, attributes) {
@@ -708,9 +719,9 @@ if (!window.clearImmediate) {
       };
 
       elements.forEach(function(el) {
+        var mu = info.mu;
         if (el.getContext) {
           var ctx = el.getContext('2d');
-          var mu = info.mu;
 
           // Save the current state before messing it
           ctx.save();
@@ -747,36 +758,38 @@ if (!window.clearImmediate) {
           // Restore the state.
           ctx.restore();
         } else {
-          // drawText on DIV element
-          var span = document.createElement('span');
+          // drawText on SVG element
+
+          if(!attributes)
+            attributes = {}
+          attributes.x =  (gx + info.gw / 2) * g * mu;
+          attributes.y = (gy + info.gh / 2) * g * mu;
+
           var transformRule = '';
-          transformRule = 'rotate(' + (- rotateDeg / Math.PI * 180) + 'deg) ';
+          if(rotateDeg !== 0) {
+            transformRule = 'rotate(' + (- rotateDeg / Math.PI * 180) + ' ' + attributes.x + ' ' + attributes.y + ') ';
+          }
           if (info.mu !== 1) {
             transformRule +=
-              'translateX(-' + (info.fillTextWidth / 4) + 'px) ' +
-              'scale(' + (1 / info.mu) + ')';
+              'translateX(-' + (info.fillTextWidth / 4) + ') ' +
+              'scale(' + (1 / mu) + ' ' + (1 / info.mu) + ')';
           }
+          transformRule += 'translate(0 ' + ((info.fillTextOffsetY + fontSize * 0.5) * mu) + ')';
+
+          attributes.transform = transformRule;
           var styleRules = {
-            'position': 'absolute',
-            'display': 'block',
             'font': settings.fontWeight + ' ' +
-                    (fontSize * info.mu) + 'px ' + settings.fontFamily,
-            'left': ((gx + info.gw / 2) * g + info.fillTextOffsetX) + 'px',
-            'top': ((gy + info.gh / 2) * g + info.fillTextOffsetY) + 'px',
-            'width': info.fillTextWidth + 'px',
-            'height': info.fillTextHeight + 'px',
+                    (fontSize * info.mu).toString(10) + 'px ' + settings.fontFamily,
             'lineHeight': fontSize + 'px',
-            'whiteSpace': 'nowrap',
-            'transform': transformRule,
-            'webkitTransform': transformRule,
-            'msTransform': transformRule,
-            'transformOrigin': '50% 40%',
-            'webkitTransformOrigin': '50% 40%',
-            'msTransformOrigin': '50% 40%'
+            'dominant-baseline': 'middle',
+            'text-anchor': 'middle'
           };
           if (color) {
-            styleRules.color = color;
+            styleRules.fill = color;
           }
+
+          var span = makeSVG('text', attributes);
+
           span.textContent = word;
           for (var cssProp in styleRules) {
             span.style[cssProp] = styleRules[cssProp];
@@ -789,6 +802,7 @@ if (!window.clearImmediate) {
           if (classes) {
             span.className += classes;
           }
+
           el.appendChild(span);
         }
       });
@@ -969,8 +983,20 @@ if (!window.clearImmediate) {
         ngy = Math.ceil(canvas.height / g);
       } else {
         var rect = canvas.getBoundingClientRect();
-        ngx = Math.ceil(rect.width / g);
-        ngy = Math.ceil(rect.height / g);
+        var width, height;
+
+        if(settings.width)
+          width = settings.width;
+        else
+          width = rect.width;
+
+        if(settings.height)
+          height = settings.height;
+        else
+          height = rect.height;
+
+        ngx = Math.ceil(width / g);
+        ngy = Math.ceil(height / g);
       }
 
       // Sending a wordcloudstart event which cause the previous loop to stop.
@@ -1002,6 +1028,7 @@ if (!window.clearImmediate) {
           } else {
             el.textContent = '';
             el.style.backgroundColor = settings.backgroundColor;
+            el.style.position = 'relative';
           }
         });
 

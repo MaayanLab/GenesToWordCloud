@@ -13,9 +13,12 @@ var last_data, fontSize;
 function draw() {
 	var max_freq = Math.max.apply(Math, tags.map(function(d) { return d[1]; }));
 	view.height(height * view.width() / width);
+	view[0].setAttribute('viewBox', '0 0 '+width+' '+height);
 	WordCloud(view[0], {
-		clearCanvas: true,
+		width: width,
+		height: height,
 		shuffle: true,
+		backgroundColor: 'rgba(255, 255, 255, 0)',
 		list: tags.map(function(t) { return [text_case(t[0]), t[1]] }),
 		fontFamily: font,
 		gridSize: grid_size,
@@ -53,6 +56,7 @@ function update() {
 		draw();
 }
 $(document).ready(function() {
+	$(window).resize(function() { view.height(height * view.width() / width); });
 	$('form').submit(function() {
 		// prepare GET url
 		var url = window.location.origin+'/view/'+$(this).attr('type');
@@ -86,22 +90,22 @@ $(document).ready(function() {
 	});
 
 	$('#save').click(function() {
-		// http://stackoverflow.com/questions/23218174/how-do-i-save-export-an-svg-file-after-creating-an-svg-with-d3-js-ie-safari-an
-		//get svg source.
+		// modified from http://stackoverflow.com/questions/23218174/how-do-i-save-export-an-svg-file-after-creating-an-svg-with-d3-js-ie-safari-an
+
 		var serializer = new XMLSerializer();
 		var source = serializer.serializeToString($('#view').get(0));
-		//add name spaces.
+
 		if(!source.match(/^<svg[^>]+xmlns="http\:\/\/www\.w3\.org\/2000\/svg"/)) {
 			source = source.replace(/^<svg/, '<svg xmlns="http://www.w3.org/2000/svg"');
 		}
 		if(!source.match(/^<svg[^>]+"http\:\/\/www\.w3\.org\/1999\/xlink"/)) {
 			source = source.replace(/^<svg/, '<svg xmlns:xlink="http://www.w3.org/1999/xlink"');
 		}
-		//add xml declaration
+		if(source.match(/^<svg[^>]+style="/)) {
+			source = source.replace(/style="[^"]+"/, '');
+		}
 		source = '<?xml version="1.0" standalone="no"?>\r\n' + source;
-		//convert svg source to URI data scheme.
 		var url = "data:image/svg+xml;charset=utf-8,"+encodeURIComponent(source);
-		//open svg
 		window.open(url, '_blank');
 	});
 });
