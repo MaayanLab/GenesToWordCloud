@@ -6,23 +6,25 @@ var width = 960;
 var height = 600;
 var rotation, rotation_proba, shape, grid_size;
 var font, font_scale, font_size;
-var text_case, tags = [], threshold;
+var text_case, tags = [], tags_left, threshold;
 var max_freq;
 var last_data, fontSize;
 
 function draw() {
 	view.height(height * view.width() / width);
 	view[0].setAttribute('viewBox', '0 0 '+width+' '+height);
+	var filtered_tags = tags.filter(function(t) {
+		return t[1] > threshold;
+	}).map(function(t) {
+		return [text_case(t[0]), t[1]]
+	});
+	tags_left = filtered_tags.map(function(t) { return t[0]; });
 	WordCloud(view[0], {
 		width: width,
 		height: height,
 		shuffle: true,
 		backgroundColor: 'rgba(255, 255, 255, 0)',
-		list: tags.filter(function(t) {
-			return t[1] > threshold;
-		}).map(function(t) {
-			return [text_case(t[0]), t[1]]
-		}),
+		list: filtered_tags,
 		fontFamily: font,
 		gridSize: grid_size,
 		weightFactor: function (size) { return font_size[0] + Math.pow(size / max_freq, font_scale) * (font_size[1] - font_size[0]); },
@@ -90,13 +92,18 @@ $(document).ready(function() {
 		state.text("Generating Wordcloud...");
 	});
 
-	view.on('wordclouddrawn', function() {
-		state.text("");
+	view.on('wordclouddrawn', function(e) {
+		var d = e.originalEvent.detail;
+		if(d.drawn)
+			tags_left.splice(tags_left.indexOf(d.item[0]), 1);
 	});
 
-	view.on('wordcloudabort', function() {
-		state.text("NOTE: A word was unable to be placed, try adjusting settings so you don't miss it.");
-	})
+	view.on('wordcloudstop', function() {
+		if(tags_left.length > 0)
+			state.text("NOTE: "+ tags_left.length + " word(s) were unable to be placed, try adjusting settings so you don't miss them.");
+		else
+			state.text("");
+	});
 
 	$('#save').click(function() {
 		// modified from http://stackoverflow.com/questions/23218174/how-do-i-save-export-an-svg-file-after-creating-an-svg-with-d3-js-ie-safari-an
