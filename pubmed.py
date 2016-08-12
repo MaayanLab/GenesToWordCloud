@@ -1,11 +1,36 @@
 '''
 Application Interface for querying the pubmed database
+
+Future Direction: This just caches terms but it would be even better to cache word frequencies (processed),
+  this will require some reorginization of the code however as pubmed_query would need to return processed
+  results rather than a big word list.
 '''
 
+import pymysql
 import urllib.request
 import itertools as it
 from bs4 import BeautifulSoup
 from config import config
+
+def pubmed_cache(pmid):
+	''' Cache results for general speedups of pubmed queries '''
+	con = pymysql.connect(**config['database'])
+	cur = con.cursor()
+	cur.execute('select terms from pubmed_cache where pmid=%s', (pmid))
+	res = cur.fetchall()
+	if res:
+		print('h', res)
+		terms = ' '.join(t['terms'] for t in res)
+	else:
+		print('m')
+		terms = pubmed_query(search=False, id=pmid)
+		try:
+			cur.execute('insert into pubmed_cache values (%s, %s)', (pmid, terms))
+			con.commit()
+		except:
+			# TODO: eliminate non-standard characters in terms so we can cache these
+			pass
+	return terms
 
 def pubmed_query(search=True, **kwargs):
 	''' API for querying the pubmed database via GET requests '''
@@ -30,8 +55,8 @@ def pubmed_query(search=True, **kwargs):
 		# search or fetch
 		if search:
 			# perform a pubmed query on each id in our results
-			return ' '.join(pubmed_query(search=False, id=i.getText())
-										  for i in soup.findAll('Id'))
+			return ' '.join(pubmed_cache(i.getText()) # pubmed_query(search=False, id=i.getText())
+							for i in soup.findAll('Id'))
 		else:
 			# return the text in the title/abstract
 			return ' '.join(res.getText()

@@ -7,7 +7,7 @@ from pymysql.cursors import DictCursor
 
 config = {
 	'database': dict(json.load(open('db.conf', 'r')), cursorclass=DictCursor),
-	'query_limit': 500,
-	'pubmed_query_limit': 150
+	'query_limit': 150,
+	'pubmed_query_limit': 10
 }
 

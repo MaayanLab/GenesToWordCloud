@@ -4,7 +4,7 @@ Expose database table querying for keywords as python functions
 
 import pymysql
 from config import config
-from pubmed import pubmed_query
+from pubmed import pubmed_cache
 
 def query(what, table, genes):
 	con = pymysql.connect(**config['database'])
@@ -32,7 +32,7 @@ def generif(genes):
 @register_table
 def pubmed(genes):
 	for row in query('pmid', 'pmid_symbol', genes):
-		yield(pubmed_query(search=False, id=row['pmid']))
+		yield(pubmed_cache(row['pmid']))
 
 @register_table
 def go(genes):
