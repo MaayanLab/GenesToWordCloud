@@ -1,0 +1,21 @@
+services:
+  app:
+    build: .
+    image: maayanlab.cloud/genes2wordcloud:0.2.0
+    ports:
+      - 5000:5000
+    environment:
+      - DATABASE_URL=mysql://${MARIADB_USER}:${MARIADB_PASSWORD}@mariadb:3306/${MARIADB_DATABASE}
+  mariadb:
+    image: mariadb
+    environment:
+      - MARIADB_DATABASE=${MARIADB_DATABASE}
+      - MARIADB_USER=${MARIADB_USER}
+      - MARIADB_PASSWORD=${MARIADB_PASSWORD}
+      - MARIADB_RANDOM_ROOT_PASSWORD=yes
+    volumes:
+      - mariadb:/var/lib/mysql
+    ports:
+      - 3306:3306
+volumes:
+  mariadb:
