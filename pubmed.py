@@ -46,7 +46,7 @@ def pubmed_query(search=True, **kwargs):
 
 		# create url serializing kwargs in GET
 		
-		url = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/e%s.fcgi?%s' % (
+		url = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/e%s.fcgi?%s' % (
 			'search' if search else 'fetch',
 			urllib.parse.urlencode(params))
 
