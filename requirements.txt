@@ -5,5 +5,5 @@ nltk
 numpy
 pymysql
 python-dotenv
+scikit-learn
 scipy
-sklearn
