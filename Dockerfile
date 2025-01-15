@@ -1,4 +1,4 @@
-FROM python:3.5
+FROM python:3.12
 
 # Copy the application folder inside the container
 ADD . /my_application
