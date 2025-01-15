@@ -14,4 +14,4 @@ WORKDIR /my_application
 
 # Set the default command to execute
 # when creating a new container
-CMD python run.py host=0.0.0.0
+CMD gunicorn --bind 0.0.0.0:5000 app:app
