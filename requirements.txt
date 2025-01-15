@@ -4,5 +4,6 @@ lxml
 nltk
 numpy
 pymysql
+python-dotenv
 scipy
 sklearn
