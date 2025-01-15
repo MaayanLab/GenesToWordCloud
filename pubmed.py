@@ -45,10 +45,10 @@ def pubmed_query(search=True, **kwargs):
 					   **kwargs)
 
 		# create url serializing kwargs in GET
+		
 		url = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/e%s.fcgi?%s' % (
 			'search' if search else 'fetch',
-			'&'.join('='.join(map(str, param))
-					  for param in params.items()))
+			urllib.parse.urlencode(params))
 
 		# open and parse the website
 		xml = urllib.request.urlopen(url)
@@ -64,5 +64,7 @@ def pubmed_query(search=True, **kwargs):
 			return ' '.join(res.getText()
 							for section in ['ArticleTitle', 'AbstractText']
 							for res in soup.findAll(section))
+	except KeyboardInterrupt: raise
 	except:
+		traceback.print_exc()
 		return ''
