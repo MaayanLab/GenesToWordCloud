@@ -7,7 +7,8 @@ Future Direction: This just caches terms but it would be even better to cache wo
 '''
 
 import pymysql
-import urllib.request
+import urllib.request, urllib.parse
+import traceback
 from bs4 import BeautifulSoup
 from config import config
 
@@ -18,17 +19,19 @@ def pubmed_cache(pmid):
 	cur.execute('select terms from pubmed_cache where pmid=%s', (pmid))
 	res = cur.fetchall()
 	if res:
-		print('h', res)
-		terms = ' '.join(t['terms'] for t in res)
+		print('h')
+		terms = ' '.join(urllib.parse.unquote(t['terms']) for t in res)
 	else:
 		print('m')
-		terms = pubmed_query(search=False, id=pmid)
 		try:
-			cur.execute('insert into pubmed_cache values (%s, %s)', (pmid, terms))
-			con.commit()
+			terms = pubmed_query(search=False, id=pmid)
+			if terms:
+				cur.execute('insert into pubmed_cache values (%s, %s)', (pmid, urllib.parse.quote(terms)))
+				con.commit()
+		except KeyboardInterrupt: raise
 		except:
-			# TODO: eliminate non-standard characters in terms so we can cache these
-			pass
+			traceback.print_exc()
+			terms = ''
 	return terms
 
 def pubmed_query(search=True, **kwargs):
