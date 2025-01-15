@@ -1,7 +1,7 @@
 services:
   app:
     build: .
-    image: maayanlab/genes2wordcloud:0.2.4
+    image: maayanlab/genes2wordcloud:0.2.5
     ports:
       - 5000:5000
     environment:
