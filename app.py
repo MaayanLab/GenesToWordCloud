@@ -4,10 +4,9 @@ Inform flask of the different pages available and do some basic preparation for 
 
 import urllib
 from bs4 import BeautifulSoup
-from flask import Flask, render_template, url_for, request
+from flask import Flask, render_template, request
 from process import process_page, error
 from pubmed import pubmed_query
-from config import config
 from database import tables
 
 app = Flask(__name__, static_folder='static')

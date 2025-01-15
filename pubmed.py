@@ -8,7 +8,6 @@ Future Direction: This just caches terms but it would be even better to cache wo
 
 import pymysql
 import urllib.request
-import itertools as it
 from bs4 import BeautifulSoup
 from config import config
 

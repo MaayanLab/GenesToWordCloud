@@ -5,10 +5,8 @@ Process functions for analyzing the text, processing it, and returning a json wi
 import re
 import json
 from nltk.tokenize import RegexpTokenizer
-from nltk.stem.porter import PorterStemmer
 from nltk.stem.wordnet import WordNetLemmatizer
-from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
-from config import config
+from sklearn.feature_extraction.text import CountVectorizer
 
 def tokenize_text(text):
 	tokenizer = RegexpTokenizer(r'\b\w{2,}\b')
